@@ -35,7 +35,7 @@ export const pvCallback = () => () => {
 
   eventTrack.add({
     type: EventType.PV,
-    category: 'pv',
+    category: 'pagehide',
     status: StatusType.Ok,
     time,
     data: {

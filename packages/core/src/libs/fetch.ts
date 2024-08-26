@@ -9,7 +9,6 @@ import {
   replaceAop,
   unknownToObject
 } from '../utils';
-import report from '../report';
 import eventTrack from '../event/event';
 
 type FetchFunc = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
@@ -26,8 +25,8 @@ export const replaceFetch = () => {
     return;
   }
 
-  const replaceFunc = (originalFetch: FetchFunc) =>
-    function (url: string, config: Partial<Request> = {}) {
+  const replaceFunc = (originalFetch: FetchFunc) => {
+    return function (url: string, config: Partial<Request> = {}) {
       const startTime = getTimestamp();
       const method = config?.method ?? 'GET';
       const headers = new Headers(config.headers || {});
@@ -90,8 +89,9 @@ export const replaceFetch = () => {
         }
       );
     };
+  };
 
-  replaceAop(_global, 'fetch', replaceFunc);
+  replaceAop(window, 'fetch', replaceFunc);
 };
 
 /**
@@ -122,9 +122,9 @@ export const httpCallback = (type: EventType.FETCH | EventType.XHR) => (data: Ht
   const { dsn } = options.get();
 
   if (result.status === StatusType.Error) {
-    // 上报接口错误
-    report.send({
-      type: EventType.HTTP,
+    // 立即上报接口错误
+    eventTrack.send({
+      type: EventType.REQUEST,
       category: type,
       status: StatusType.Error,
       time: data.time,
@@ -135,7 +135,7 @@ export const httpCallback = (type: EventType.FETCH | EventType.XHR) => (data: Ht
 
   if (!data.url.includes(dsn)) {
     eventTrack.add({
-      type: EventType.HTTP,
+      type: EventType.REQUEST,
       category: type,
       status: StatusType.Ok,
       time: data.time,

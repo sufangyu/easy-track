@@ -43,7 +43,7 @@ export const hashCallback = () => {
     const pv = getPVTime(time, currentFrom);
 
     eventTrack.add({
-      type: EventType.HASH_CHANGE,
+      type: EventType.PV,
       category: 'hashchange',
       status: StatusType.Ok,
       time,

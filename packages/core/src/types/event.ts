@@ -2,26 +2,27 @@ import { Callback } from './base';
 import { DeviceInfo } from './global';
 import { CacheType } from './options';
 
+/**
+ * 事件类型
+ *
+ * @export
+ * @enum {number}
+ */
 export const enum EventType {
-  BLANK_SCREEN = 'blank_screen',
+  BLANK_SCREEN = 'blank-screen',
   PERFORMANCE = 'performance',
-
+  RESOURCE = 'resource',
   XHR = 'xhr',
   FETCH = 'fetch',
-  HTTP = 'http',
-
+  REQUEST = 'request',
   ERROR = 'error',
   UNHANDLEDREJECTION = 'unhandledrejection',
-
-  EVENT_TRACK = 'click',
-
+  EVENT_TRACK = 'event-track',
   PV = 'pv',
   HASH_CHANGE = 'hashchange',
   HISTORY = 'history',
-  HISTORY_PUSHSTATE = 'history_pushState',
-  HISTORY_REPLACESTATE = 'history_replaceState',
-
-  Resource = 'resource'
+  HISTORY_PUSHSTATE = 'history-pushState',
+  HISTORY_REPLACESTATE = 'history-replaceState'
 }
 
 export const enum StatusType {
@@ -29,42 +30,65 @@ export const enum StatusType {
   Error = 'error'
 }
 
-export type EventCategory =
-  | 'click'
-  | 'request'
-  | 'xhr'
-  | 'fetch'
-  | 'download'
-  | 'request'
-  | 'enter_page'
-  | 'error'
-  | 'unhandledrejection'
-  | 'leave_page'
-  | 'hide_page'
-  | 'show_page'
-  | 'push_page'
-  | 'performance'
-  | 'blank_screen'
-  | 'longtask'
-  | 'resource'
-  | 'memory'
-  | 'recordscreen'
-  | 'hashchange'
-  | 'history'
-  | 'history_pushstate'
-  | 'history_replaceState'
-  | 'pv';
-
-/**
- * 事件上报信息
- */
-export interface EventParams {
-  type: EventType;
-  category: EventCategory;
+// 基础事件参数
+interface EventParamsBase {
   time: number;
   status: StatusType;
   data: any;
 }
+
+// 白屏
+interface EventParamsBlankScreen extends EventParamsBase {
+  type: EventType.BLANK_SCREEN;
+  category: 'blank-screen';
+}
+
+// 性能
+interface EventParamsPerformance extends EventParamsBase {
+  type: EventType.PERFORMANCE;
+  category: 'performance';
+}
+
+// 埋点
+interface EventParamsEventTrack extends EventParamsBase {
+  type: EventType.EVENT_TRACK;
+  category: 'click';
+}
+
+// 错误
+interface EventParamsError extends EventParamsBase {
+  type: EventType.ERROR | EventType.UNHANDLEDREJECTION;
+  category: 'error' | 'unhandledrejection';
+}
+
+// 网络请求
+interface EventParamsHttp extends EventParamsBase {
+  type: EventType.REQUEST;
+  category: 'xhr' | 'fetch';
+}
+
+// 页面访问
+interface EventParamsPage extends EventParamsBase {
+  type: EventType.PV;
+  category:
+    | 'hashchange'
+    | 'history'
+    | 'history-pushstate'
+    | 'history-replaceState'
+    | 'pagehide'
+    | 'pageshow';
+}
+
+/**
+ * 事件上报信息
+ */
+export type EventParams =
+  | EventParamsBlankScreen
+  | EventParamsPerformance
+  | EventParamsError
+  | EventParamsHttp
+  | EventParamsEventTrack
+  | EventParamsPage;
 
 /**
  * 公共上报信息
@@ -146,6 +170,9 @@ export interface ReplaceParams {
   callback?: Callback;
 }
 
+/**
+ *  路由参数
+ */
 export interface RouteParams {
   from: string;
   to: string;

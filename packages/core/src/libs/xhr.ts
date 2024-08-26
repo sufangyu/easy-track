@@ -20,10 +20,10 @@ type XMLHttpRequestExtend = XMLHttpRequest & { xhrData: HttpData };
 export const replaceXHR = () => {
   const xhrProto = XMLHttpRequest.prototype;
 
-  const replaceOpenFunc = (originalOpen: VoidFunc) =>
-    function (_this: XMLHttpRequestExtend, ...args: any[]): void {
+  const replaceOpenFunc = (originalOpen: VoidFunc) => {
+    return function (this: XMLHttpRequestExtend, ...args: any[]): void {
       const [method, url] = args;
-      const { withCredentials, responseType } = _this;
+      const { withCredentials, responseType } = this;
       const startTime = getTimestamp();
 
       const xhrData: HttpData = {
@@ -44,13 +44,13 @@ export const replaceXHR = () => {
           data: null
         }
       };
-      _this.xhrData = xhrData;
+      this.xhrData = xhrData;
 
-      originalOpen.apply(_this, args);
+      originalOpen.apply(this, args);
     };
+  };
 
   let headers: Record<string, string> = {};
-
   /**
    * 重写 setRequestHeader
    * - axios 内部请求头设置会先于 xhr.setRequestHeader 执行, 导致请求头可能会出现丢失
@@ -58,21 +58,22 @@ export const replaceXHR = () => {
    * @param {*} originalSetRequestHeader
    * @return {*}
    */
-  const replaceSetRequestHeaderFunc = (originalSetRequestHeader: any) =>
-    function (_this: XMLHttpRequestExtend, ...args: [key: string, value: string]): void {
+  const replaceSetRequestHeaderFunc = (originalSetRequestHeader: any) => {
+    return function (this: XMLHttpRequestExtend, ...args: [key: string, value: string]): void {
       const [key = '', value = ''] = args;
       headers[key] = value;
 
-      _this.xhrData!.request!.headers = {
+      this.xhrData!.request!.headers = {
         ...headers
       };
 
-      originalSetRequestHeader.apply(_this, args);
+      originalSetRequestHeader.apply(this, args);
     };
+  };
 
-  const replaceSendFunc = (originalSend: VoidFunc) =>
-    function (_this: XMLHttpRequestExtend, ...args: any[]): void {
-      const { xhrData, responseType, withCredentials } = _this;
+  const replaceSendFunc = (originalSend: VoidFunc) => {
+    return function (this: XMLHttpRequestExtend, ...args: any[]): void {
+      const { xhrData, responseType, withCredentials } = this;
       const { method, url, time } = xhrData ?? {};
       const [body] = args ?? [];
 
@@ -82,15 +83,15 @@ export const replaceXHR = () => {
       xhrData.request!.body = body;
 
       on({
-        el: _this,
+        el: this,
         eventName: 'loadend',
-        event(_self: any) {
+        event(this: any) {
           if (checkIsIgnoreUrl(url, method!)) {
             return;
           }
 
-          const { responseType, response, status, statusText } = _self;
-          const allHeaders = _self.getAllResponseHeaders();
+          const { responseType, response, status, statusText } = this;
+          const allHeaders = this.getAllResponseHeaders();
           const isResponseFailed = status === 0 || status >= 400;
           const isResponseSuccessed = status >= 200 && status < 400;
 
@@ -115,8 +116,9 @@ export const replaceXHR = () => {
       });
 
       headers = {};
-      originalSend.apply(_this, args);
+      originalSend.apply(this, args);
     };
+  };
 
   replaceAop(xhrProto, 'open', replaceOpenFunc);
   replaceAop(xhrProto, 'setRequestHeader', replaceSetRequestHeaderFunc);

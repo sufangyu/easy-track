@@ -60,11 +60,11 @@ export const initReplace = () => {
   if (siwtchMap[EventType.HASH_CHANGE] || siwtchMap[EventType.HISTORY]) {
     addListenOrReplace({
       type: EventType.HISTORY_PUSHSTATE,
-      callback: historyCallback('history_pushstate')
+      callback: historyCallback('history-pushstate')
     });
     addListenOrReplace({
       type: EventType.HISTORY_REPLACESTATE,
-      callback: historyCallback('history_replaceState')
+      callback: historyCallback('history-replaceState')
     });
     addListenOrReplace({
       type: EventType.PV,

@@ -26,7 +26,7 @@ export const replaceHistoryPushState = (): void => {
   }
 
   const replaceFunc = (originalFn: VoidFunc): VoidFunc =>
-    function (_this: any, ...args: any[]) {
+    function (this: any, ...args: any[]) {
       const url = args?.[2];
       if (url) {
         const from = lastHref;
@@ -39,7 +39,7 @@ export const replaceHistoryPushState = (): void => {
         });
       }
 
-      return originalFn.apply(_this, args);
+      return originalFn.apply(this, args);
     };
 
   replaceAop(_global.history, 'pushState', replaceFunc);
@@ -56,7 +56,7 @@ export const replaceHistoryReplaceState = (): void => {
   }
 
   const replaceFunc = (originalFn: VoidFunc): VoidFunc =>
-    function (_this: any, ...args: any[]) {
+    function (this: any, ...args: any[]) {
       const url = args?.[2];
       if (url) {
         const from = lastHref;
@@ -69,7 +69,7 @@ export const replaceHistoryReplaceState = (): void => {
         });
       }
 
-      return originalFn.apply(_this, args);
+      return originalFn.apply(this, args);
     };
 
   replaceAop(_global.history, 'replaceState', replaceFunc);
@@ -82,7 +82,7 @@ export const replaceHistoryReplaceState = (): void => {
 export const replaceHistory = () => {
   const onPopstate = window.onpopstate;
 
-  window.onpopstate = function (_this: any, ...args: any) {
+  window.onpopstate = function (this: any, ...args: any) {
     const [lastPopState] = args as PopStateEvent[];
     const { current, forward } = lastPopState.state || {};
     eventEmitter.emit(EventType.HISTORY, {
@@ -90,7 +90,7 @@ export const replaceHistory = () => {
       to: current
     });
 
-    onPopstate?.apply(_this, args);
+    onPopstate?.apply(this, args);
   };
 };
 
@@ -101,7 +101,7 @@ export const replaceHistory = () => {
  * @return {*}
  */
 export const historyCallback = (
-  category: 'history' | 'history_pushstate' | 'history_replaceState'
+  category: 'history' | 'history-pushstate' | 'history-replaceState'
 ) => {
   let urls: string[] = [];
   return (data: RouteParams) => {
@@ -117,7 +117,7 @@ export const historyCallback = (
 
     // fix: 修复 Vue - router 的 push 会同时触发 pushState 和 replaceState,
     // 其中 replaceState 的 to 地址和当前的地址相同导致重复上报无效数据, 此处采用过滤掉
-    if (category === 'history_replaceState') {
+    if (category === EventType.HISTORY_REPLACESTATE) {
       const curLocationUrl = getLocationHref();
       const { relative: currentRelative } = parseUrlToObj(curLocationUrl);
 
@@ -133,7 +133,7 @@ export const historyCallback = (
     const pv = getPVTime(time, currentFrom);
 
     eventTrack.add({
-      type: EventType.HISTORY,
+      type: EventType.PV,
       category,
       status: StatusType.Ok,
       time,

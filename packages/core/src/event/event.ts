@@ -1,5 +1,5 @@
 import { cloneDeep, isPlainObject } from 'lodash-es';
-import { CacheType, EventOptions, EventParams } from '../types';
+import { CacheType, Callback, EventOptions, EventParams } from '../types';
 import { logger } from '../utils';
 import report from '../report';
 import { db, storage } from '../setup/cache/cache.utils';
@@ -66,6 +66,18 @@ export class EventTrack {
     if (data.length >= maxEvents) {
       this.report(cloneDeep(data));
     }
+  }
+
+  /**
+   * 立即上报数据
+   *
+   * @param {(EventParams | EventParams[])} data
+   * @param {Callback} [beforeSend]
+   * @return {*}
+   * @memberof Report
+   */
+  async send(data: EventParams | EventParams[], beforeSend?: Callback): Promise<void> {
+    report.send(data, beforeSend);
   }
 
   private async clearReportData() {

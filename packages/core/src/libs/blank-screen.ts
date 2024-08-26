@@ -22,7 +22,7 @@ export const listenBlankScreen = () => {
       report.send({
         status: StatusType.Ok,
         type: EventType.BLANK_SCREEN,
-        category: 'blank_screen',
+        category: 'blank-screen',
         time: getTimestamp(),
         data: {
           status,
