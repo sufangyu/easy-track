@@ -1,0 +1,39 @@
+{
+  "name": "monorepo-start",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint --fix",
+    "dev": "node scripts/watch.mjs",
+    "build": "node scripts/build.mjs",
+    "examples": "cross-env NODE_ENV=demo node --loader ts-node/esm --no-warnings=ExperimentalWarning ./examples/server/index.ts"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9.9.1",
+    "@types/express": "^4.17.21",
+    "@types/lodash-es": "^4.17.12",
+    "@types/node": "^18.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.2.0",
+    "@typescript-eslint/parser": "^8.2.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.9.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "express": "^4.19.2",
+    "globals": "^15.9.0",
+    "remove": "^0.1.5",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.5.4",
+    "vite": "5.4.0",
+    "vite-plugin-dts": "^4.0.3",
+    "vite-plugin-eslint": "^1.8.1"
+  },
+  "dependencies": {
+    "@easy-track/core": "workspace:^",
+    "@easy-track/vue3": "workspace:^",
+    "lodash-es": "^4.17.21"
+  }
+}

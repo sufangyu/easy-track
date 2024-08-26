@@ -1,0 +1,29 @@
+{
+  "name": "vue3",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@easy-track/vue3": "workspace:^",
+    "@web-tracing/vue3": "^2.0.6",
+    "@websee/core": "^4.0.2",
+    "axios": "^1.7.4",
+    "vue": "^3.4.35",
+    "vue-router": "^4.4.3",
+    "xhr": "^2.6.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.2",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.41",
+    "tailwindcss": "^3.4.10",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.0",
+    "vue-tsc": "^2.0.29"
+  }
+}

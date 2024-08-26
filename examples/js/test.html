@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>test-click-demo</title>
+  </head>
+
+  <body>
+    <h1>test-click:点击埋点</h1>
+    <div>
+      <button id="codeErr" class="codeErrClass    custom-event" name="click-event" title="点击事件">点击事件</button>
+    </div>
+
+    <div>
+      <a href="https://www.baidu.com">跳到百度搜索</a>
+    </div>
+
+    <script>
+      // 处理 html node
+      function normalTarget(ev) {
+        if (!ev || !ev.tagName) {
+          return '';
+        }
+
+        const res = [];
+        const { id, className } = ev;
+
+        // 收集 标签名, ID, class
+        res.push(ev.tagName.toLowerCase());
+        id && res.push(`#${id}`);
+        if (className && '[object String]' === Object.prototype.toString.call(className)) {
+          for (let classes = className.split(/\s+/), i = 0; i < classes.length; i++) {
+            // className 包含 active 的不加入路径
+            const name = classes[i];
+            if (name.indexOf('active') < 0) {
+              res.push(`.${name}`);
+            }
+          }
+        }
+        // 收集标签指定属性
+        const attrs = ['type', 'name', 'title', 'alt'];
+        for (let i = 0; i < attrs.length; i++) {
+          const attrKey = attrs[i];
+          const attrValue = ev.getAttribute(attrKey);
+          attrValue && res.push(`[${attrKey}="${attrValue}"]`);
+        }
+
+        return res.join('');
+      }
+
+      // 获取元素路径, 最多保留5层
+      function getElmPath(ev) {
+        if (!ev || ev.nodeType !== 1) {
+          return '';
+        }
+
+        // 元素路径层数最多5层
+        const MAX_DEEP_LENGTH = 5;
+        const res = [];
+        res.push(`(${ev.innerText.substr(0, 50)})`);
+
+        for (let target = ev, deepLength = 0; deepLength < MAX_DEEP_LENGTH; deepLength += 1) {
+          const ele = normalTarget(target);
+          if ( ele === 'html' ) {
+            break;
+          }
+          res.push(ele);
+          target = target.parentNode;
+        }
+        return res.reverse().join(' > ')
+      }
+
+      window.addEventListener('click', (event) => {
+        const path = getElmPath(event.target);
+        console.log(path);
+      }, true);
+    </script>
+  </body>
+</html>

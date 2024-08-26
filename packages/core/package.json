@@ -1,0 +1,30 @@
+{
+  "name": "@easy-track/core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.umd.js",
+  "module": "dist/index.es.js",
+  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js",
+      "types": "./types/index.d.ts"
+    },
+    "./*": "./*"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "error-stack-parser-es": "^0.1.5",
+    "ua-parser-js": "^1.0.38",
+    "web-vitals": "^4.2.3"
+  },
+  "devDependencies": {
+    "@types/ua-parser-js": "^0.7.39"
+  }
+}
