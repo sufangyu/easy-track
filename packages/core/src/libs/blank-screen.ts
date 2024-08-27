@@ -2,7 +2,7 @@ import { isFunction, isString } from 'lodash-es';
 import options from '../options';
 import { EventType, StatusType } from '../types';
 import { _global, getLocationHref, getTimestamp, logger } from '../utils';
-import eventTrack from '../event/event';
+import eventTrack from '../event';
 
 /**
  * 监听白屏检测结果

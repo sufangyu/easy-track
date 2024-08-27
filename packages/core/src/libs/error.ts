@@ -1,7 +1,7 @@
 import { parse } from 'error-stack-parser-es';
 import { EventType, StatusType } from '../types';
 import { _global, eventEmitter, getTimestamp, interceptStr, on } from '../utils';
-import eventTrack from '../event/event';
+import eventTrack from '../event';
 
 /**
  * 监听全局错误事件

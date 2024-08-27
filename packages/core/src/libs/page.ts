@@ -1,4 +1,4 @@
-import eventTrack from '../event/event';
+import eventTrack from '../event';
 import { EventType, StatusType } from '../types';
 import {
   __EASY_TRACK__,

@@ -2,7 +2,7 @@ import { cloneDeep, takeRight } from 'lodash-es';
 import options from '../options';
 import { EventType, StatusType } from '../types';
 import { _global, eventEmitter, getPVTime, getTimestamp, on, parseUrlToObj } from '../utils';
-import eventTrack from '../event/event';
+import eventTrack from '../event';
 
 /**
  * 监听hashchange事件

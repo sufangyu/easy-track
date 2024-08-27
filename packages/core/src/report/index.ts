@@ -6,9 +6,17 @@ import {
   ReportClassOptions,
   ReportParams,
   RequestMethod
-} from './types';
-import { getCurrentDomain, getCurrentHref, getUserAgent, getUUID } from './utils/common';
-import { __EASY_TRACK__, isSupportFetch, logger, Queue } from './utils';
+} from '../types';
+import {
+  __EASY_TRACK__,
+  isSupportFetch,
+  logger,
+  Queue,
+  getCurrentDomain,
+  getCurrentHref,
+  getUserAgent,
+  getUUID
+} from '../utils';
 
 export class Report {
   private options!: ReportClassOptions;

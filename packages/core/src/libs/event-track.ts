@@ -13,7 +13,7 @@ import {
 } from '../utils';
 import { EventType, StatusType } from '../types';
 import options from '../options';
-import eventTrack from '../event/event';
+import eventTrack from '../event';
 
 /**
  * 事件埋点

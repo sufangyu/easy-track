@@ -9,7 +9,7 @@ import {
   replaceAop,
   unknownToObject
 } from '../utils';
-import eventTrack from '../event/event';
+import eventTrack from '../event';
 
 type FetchFunc = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 

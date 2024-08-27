@@ -207,13 +207,17 @@ export class TrackIndexedDB<T> {
    */
   remove(storeName: string, primaryKey: string): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (!this.isInitialized) {
+        return;
+      }
+
       const transaction = this.getTransaction(storeName, TransactionType.Readwrite);
-      const objectStore = transaction.objectStore(storeName);
+      const objectStore = transaction!.objectStore(storeName);
       objectStore.delete(primaryKey);
 
-      transaction.oncomplete = () => resolve();
+      transaction!.oncomplete = () => resolve();
 
-      transaction.onerror = (event: Event) => {
+      transaction!.onerror = (event: Event) => {
         reject((event.target as IDBTransaction).error);
       };
     });
