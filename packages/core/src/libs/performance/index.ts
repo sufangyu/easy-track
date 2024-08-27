@@ -1,7 +1,7 @@
 import { onLCP, onFID, onCLS, onFCP, onTTFB, onINP, type Metric } from 'web-vitals';
 import { getCLS, getFCP, getFID, getLCP, getResources, getTTFB, isSafari, onFSP } from './utils';
 import { Callback, EventType, StatusType } from '../../types';
-import { _global, on, getTimestamp } from '../../utils';
+import { _global, on, getTimestamp, eventEmitter } from '../../utils';
 import eventTrack from '../../event/event';
 
 /**
@@ -10,7 +10,7 @@ import eventTrack from '../../event/event';
  * @export
  * @class WebPerformance
  */
-export default class WebPerformance {
+class WebPerformance {
   constructor() {
     this.getWebVitals((res: Metric) => {
       const { name, rating, value } = res;
@@ -29,7 +29,7 @@ export default class WebPerformance {
 
     this.getLongtask();
 
-    this.getResourceAndMemory();
+    this.getMemory();
   }
 
   /**
@@ -83,29 +83,19 @@ export default class WebPerformance {
   }
 
   /**
-   * 获取资源列表、内存情况上报
+   * 获取内存情况
    *
    * - 注意: safari、firefox不支持该属性
    *
    * @private
    * @memberof WebPerformance
    */
-  private getResourceAndMemory() {
+  private getMemory() {
     on({
       el: _global,
       eventName: 'load',
       event: () => {
-        // 上报资源列表
-        eventTrack.add({
-          type: EventType.PERFORMANCE,
-          category: 'resource',
-          time: getTimestamp(),
-          status: StatusType.Ok,
-          data: getResources()
-        });
-
         const performance = window.performance as any;
-
         if (performance.memory) {
           eventTrack.add({
             type: EventType.PERFORMANCE,
@@ -133,4 +123,33 @@ export default class WebPerformance {
  */
 export const listenWebPerformance = () => {
   new WebPerformance();
+};
+
+/**
+ * web 资源
+ *
+ */
+export const listenWebResource = () => {
+  on({
+    el: _global,
+    eventName: 'load',
+    event: () => {
+      const source = getResources();
+      eventEmitter.emit(EventType.RESOURCE, source);
+    }
+  });
+};
+
+/**
+ * web 资源回调
+ *
+ */
+export const webResourceCallback = () => (data: PerformanceResourceTiming[]) => {
+  eventTrack.add({
+    type: EventType.PERFORMANCE,
+    category: 'resource',
+    time: getTimestamp(),
+    status: StatusType.Ok,
+    data
+  });
 };

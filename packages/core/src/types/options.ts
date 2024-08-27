@@ -96,6 +96,7 @@ export interface Switch {
   history: boolean;
   recordScreen: boolean;
   performance: boolean;
+  resource: boolean;
 }
 
 /**

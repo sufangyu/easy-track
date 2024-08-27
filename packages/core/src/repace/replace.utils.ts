@@ -10,7 +10,8 @@ import {
   replaceHistoryPushState,
   replaceHistoryReplaceState,
   replaceXHR,
-  listenPageVisiable
+  listenPageVisiable,
+  listenWebResource
 } from '../libs';
 import { _global, eventEmitter } from '../utils';
 import { EventType, type ReplaceParams } from '../types';
@@ -19,7 +20,7 @@ const listenOrReplace = (type: EventType) => {
   const listenOrReplaceFuncMap: Record<EventType, () => void> = {
     [EventType.BLANK_SCREEN]: listenBlankScreen,
     [EventType.PERFORMANCE]: listenWebPerformance,
-    [EventType.RESOURCE]: () => {},
+    [EventType.RESOURCE]: listenWebResource,
 
     [EventType.XHR]: replaceXHR,
     [EventType.FETCH]: replaceFetch,

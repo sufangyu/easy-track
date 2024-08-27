@@ -23,7 +23,8 @@ const getDefaultOptions = (): InitOptions => ({
     blankScreen: true,
     hashchange: true,
     history: false,
-    performance: true
+    performance: true,
+    resource: true
   },
   containerElements: ['html', 'body', '#app', '#root'],
   skeleton: false,
@@ -126,7 +127,8 @@ class Options {
       blankScreen,
       hashchange,
       history,
-      performance
+      performance,
+      resource
       // recordScreen,
     } = this.getSwitchs();
 
@@ -143,6 +145,7 @@ class Options {
     this.switchMap[EventType.HASH_CHANGE] = hashchange;
     this.switchMap[EventType.HISTORY] = history;
     this.switchMap[EventType.PERFORMANCE] = performance;
+    this.switchMap[EventType.RESOURCE] = resource;
   }
 }
 

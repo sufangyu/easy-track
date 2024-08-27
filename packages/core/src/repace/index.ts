@@ -4,7 +4,8 @@ import {
   unhandledrejectionCallback,
   eventTrackCallback,
   httpCallback,
-  pvCallback
+  pvCallback,
+  webResourceCallback
 } from '../libs';
 import { errorCallback } from '../libs/error';
 import options from '../options';
@@ -26,7 +27,10 @@ export const initReplace = () => {
 
   // 全局错误
   if (siwtchMap[EventType.ERROR]) {
-    addListenOrReplace({ type: EventType.ERROR, callback: errorCallback() });
+    addListenOrReplace({
+      type: EventType.ERROR,
+      callback: errorCallback()
+    });
   }
 
   // 全局异步错误
@@ -40,6 +44,14 @@ export const initReplace = () => {
   // 性能监控
   if (siwtchMap[EventType.PERFORMANCE]) {
     addListenOrReplace({ type: EventType.PERFORMANCE });
+  }
+
+  // 资源加载
+  if (siwtchMap[EventType.RESOURCE]) {
+    addListenOrReplace({
+      type: EventType.RESOURCE,
+      callback: webResourceCallback()
+    });
   }
 
   // 页面跳转 - hash
