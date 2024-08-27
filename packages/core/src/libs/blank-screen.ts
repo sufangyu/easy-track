@@ -1,8 +1,8 @@
 import { isFunction, isString } from 'lodash-es';
 import options from '../options';
-import report from '../report';
 import { EventType, StatusType } from '../types';
 import { _global, getLocationHref, getTimestamp, logger } from '../utils';
+import eventTrack from '../event/event';
 
 /**
  * 监听白屏检测结果
@@ -19,7 +19,7 @@ export const listenBlankScreen = () => {
     skeleton,
     containerElements,
     callback: (status) => {
-      report.send({
+      eventTrack.send({
         status: StatusType.Ok,
         type: EventType.BLANK_SCREEN,
         category: 'blank-screen',

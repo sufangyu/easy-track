@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { PACKAGES_NAME } from '../setting';
 
-const logPrefix = [`%c[${PACKAGES_NAME}]:`, 'font-weight: bolder; color: white'];
+const logPrefix = [`%c[${PACKAGES_NAME}]:`, 'font-weight: normal; color: white'];
 
 export const logger = {
   _flag: false,

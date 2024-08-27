@@ -46,7 +46,7 @@ interface EventParamsBlankScreen extends EventParamsBase {
 // 性能
 interface EventParamsPerformance extends EventParamsBase {
   type: EventType.PERFORMANCE;
-  category: 'performance';
+  category: 'performance' | 'longtask' | 'resource' | 'memory';
 }
 
 // 埋点
@@ -57,8 +57,8 @@ interface EventParamsEventTrack extends EventParamsBase {
 
 // 错误
 interface EventParamsError extends EventParamsBase {
-  type: EventType.ERROR | EventType.UNHANDLEDREJECTION;
-  category: 'error' | 'unhandledrejection';
+  type: EventType.ERROR | EventType.UNHANDLEDREJECTION | EventType.RESOURCE;
+  category: 'error' | 'unhandledrejection' | 'resource';
 }
 
 // 网络请求

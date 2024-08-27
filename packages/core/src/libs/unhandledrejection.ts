@@ -1,7 +1,7 @@
 import { parse } from 'error-stack-parser-es';
 import { EventType, StatusType } from '../types';
 import { _global, eventEmitter, getTimestamp, on, unknownToString } from '../utils';
-import report from '../report';
+import eventTrack from '../event/event';
 
 /**
  * 监听 unhandledrejection 事件
@@ -40,7 +40,7 @@ export const unhandledrejectionCallback = () => (ev: PromiseRejectionEvent) => {
     message: unknownToString(reason.message || reason.stack)
   };
 
-  report.send({
+  eventTrack.send({
     type: EventType.UNHANDLEDREJECTION,
     category: 'unhandledrejection',
     status: StatusType.Error,

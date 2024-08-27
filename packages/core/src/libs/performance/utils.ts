@@ -309,7 +309,7 @@ export const getResources = (): PerformanceResourceTiming[] => {
     .filter((entry) => ['fetch', 'xmlhttprequest', 'beacon'].indexOf(entry.initiatorType) === -1)
     .map((entry) => {
       (entry as any).isCache = isCache(entry);
-      return entry;
+      return JSON.parse(JSON.stringify(entry));
     });
 
   return list;

@@ -1,8 +1,8 @@
 import { onLCP, onFID, onCLS, onFCP, onTTFB, onINP, type Metric } from 'web-vitals';
-import report, { Report } from '../../report';
 import { getCLS, getFCP, getFID, getLCP, getResources, getTTFB, isSafari, onFSP } from './utils';
 import { Callback, EventType, StatusType } from '../../types';
 import { _global, on, getTimestamp } from '../../utils';
+import eventTrack from '../../event/event';
 
 /**
  * 性能监控
@@ -11,14 +11,10 @@ import { _global, on, getTimestamp } from '../../utils';
  * @class WebPerformance
  */
 export default class WebPerformance {
-  private report!: Report;
-
-  constructor({ report }: { report: Report }) {
-    this.report = report;
-
+  constructor() {
     this.getWebVitals((res: Metric) => {
       const { name, rating, value } = res;
-      report.send({
+      eventTrack.add({
         type: EventType.PERFORMANCE,
         category: 'performance',
         status: StatusType.Ok,
@@ -74,13 +70,12 @@ export default class WebPerformance {
   private getLongtask() {
     const observer = new PerformanceObserver((entries) => {
       for (const long of entries.getEntries()) {
-        // console.log("上报长任务", long);
-        this.report.send({
+        eventTrack.add({
           type: EventType.PERFORMANCE,
           category: 'longtask',
           time: getTimestamp(),
           status: StatusType.Ok,
-          data: long
+          data: JSON.parse(JSON.stringify(long))
         });
       }
     });
@@ -101,7 +96,7 @@ export default class WebPerformance {
       eventName: 'load',
       event: () => {
         // 上报资源列表
-        this.report.send({
+        eventTrack.add({
           type: EventType.PERFORMANCE,
           category: 'resource',
           time: getTimestamp(),
@@ -112,7 +107,7 @@ export default class WebPerformance {
         const performance = window.performance as any;
 
         if (performance.memory) {
-          this.report.send({
+          eventTrack.add({
             type: EventType.PERFORMANCE,
             category: 'memory',
             time: getTimestamp(),
@@ -137,5 +132,5 @@ export default class WebPerformance {
  *
  */
 export const listenWebPerformance = () => {
-  new WebPerformance({ report });
+  new WebPerformance();
 };

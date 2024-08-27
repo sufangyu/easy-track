@@ -1,7 +1,7 @@
 import { parse } from 'error-stack-parser-es';
 import { EventType, StatusType } from '../types';
 import { _global, eventEmitter, getTimestamp, interceptStr, on } from '../utils';
-import report from '../report';
+import eventTrack from '../event/event';
 
 /**
  * 监听全局错误事件
@@ -51,7 +51,7 @@ export const errorCallback: () => (
       line,
       column
     };
-    report.send({
+    eventTrack.send({
       type: EventType.ERROR,
       category: 'error',
       time: getTimestamp(),
@@ -69,8 +69,8 @@ export const errorCallback: () => (
       message: `${interceptStr(url, 250)}资源加载失败`
     };
 
-    report.send({
-      type: EventType.Resource,
+    eventTrack.send({
+      type: EventType.ERROR,
       category: 'resource',
       time: getTimestamp(),
       status: StatusType.Error,

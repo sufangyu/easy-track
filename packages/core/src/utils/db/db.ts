@@ -262,7 +262,6 @@ export class TrackIndexedDB<T> {
       const request = objectStore!.getAll();
 
       request.onsuccess = (event: Event) => {
-        console.log('获取表全部数据', (event.target as IDBRequest).result);
         resolve((event.target as IDBRequest).result);
       };
 
@@ -284,8 +283,6 @@ export class TrackIndexedDB<T> {
       if (!this.isInitialized) {
         return;
       }
-
-      console.log('删除表数据');
 
       const transaction = this.getTransaction(storeName, TransactionType.Readwrite);
       const objectStore = this.getObjectStore(storeName, TransactionType.Readwrite);
