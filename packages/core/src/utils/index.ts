@@ -11,3 +11,4 @@ export * from './replace';
 export * from './transform';
 export * from './validate';
 export * from './pv';
+export * from './element';

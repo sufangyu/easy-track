@@ -3,6 +3,7 @@ import {
   _global,
   eventEmitter,
   getLocationHref,
+  getElementXPath,
   getTargetDomByPointerEvent,
   getTimestamp,
   htmlElementAsString,
@@ -50,8 +51,10 @@ export const eventTrackCallback = () => (ev: PointerEvent) => {
   // 元素上的自定义事件名称、上报数据
   const curEventName = el.getAttribute('data-event-name') ?? '';
   const curEventParams = el.getAttribute('data-event-params') ?? '';
+  // 元素的 xPath
+  const xPath = getElementXPath(el);
 
-  // 上报配置的元素
+  // 上报指定的配置元素
   if (globalClickListeners.length > 0) {
     globalClickListeners.forEach(
       ({ selector = '', elementText = '', eventName = '', data = '' }) => {
@@ -79,6 +82,7 @@ export const eventTrackCallback = () => (ev: PointerEvent) => {
             rect,
             url: getLocationHref(),
             eventName: eventName || curEventName,
+            xPath,
             data: unknownToObject(data),
             params: unknownToObject(curEventParams)
           }
@@ -101,6 +105,7 @@ export const eventTrackCallback = () => (ev: PointerEvent) => {
         rect,
         url: getLocationHref(),
         eventName: curEventName,
+        xPath,
         params: unknownToObject(curEventParams)
       }
     });
