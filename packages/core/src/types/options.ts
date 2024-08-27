@@ -161,6 +161,8 @@ export interface InitOptions {
   report?: ReportOptions;
   /**
    * 数据存储类型
+   * 
+   * - 建议使用 storage
    *
    * @type {CacheType}
    * @memberof InitOptions

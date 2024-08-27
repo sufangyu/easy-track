@@ -84,8 +84,8 @@ export class Report {
       return;
     }
 
-    logger.log('Report data：', reportData);
-    beforeSend?.();
+    logger.log('上报数据:', reportData);
+    isFunction(beforeSend) && beforeSend?.();
 
     // 自定义上报
     if (isFunction(customReport)) {

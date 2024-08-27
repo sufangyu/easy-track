@@ -17,9 +17,7 @@ const setupDB = async (appCode: string) => {
       throw new Error('当前浏览器不支持 IndexedDB');
     }
 
-    await db.init({
-      dbName: appCode
-    });
+    await db.init({ dbName: appCode });
   } catch (_err) {
     logger.warn('初始化IndexedDB失败, 已关闭并且缓存降级为 normal');
     options.setCacheType('normal');

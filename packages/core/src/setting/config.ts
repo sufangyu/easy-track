@@ -8,4 +8,4 @@ export const STORAGE_KEY_SUFFIX = '_easy_track';
 export const DB_NAME_SUFFIX = '_easy_track_db';
 export const DB_VERSION = 1;
 export const DB_EVENT_STORE_NAME = 'event_store';
-export const DB_EVENT_STORE_PRIMARY_KEY = 'time';
+export const DB_EVENT_STORE_PRIMARY_KEY = 'id';

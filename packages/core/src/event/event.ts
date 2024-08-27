@@ -12,11 +12,12 @@ import { DB_EVENT_STORE_NAME } from '../setting';
  * @class EventTrack
  */
 export class EventTrack {
-  private data: EventParams[] = [];
-
   private cacheType!: CacheType;
 
   private appCode!: string;
+
+  // 待上报队列数据
+  private data: EventParams[] = [];
 
   // 待上传队列数据最大个数
   private maxEvents!: number;
@@ -40,8 +41,7 @@ export class EventTrack {
    */
   async add(params: EventParams) {
     const { maxEvents, cacheType } = this;
-    logger.log('添加到待上报队列的数据 =>', params);
-    logger.log('---------- END ----------');
+    logger.log('添加到队列:', params);
 
     if (!this.validate(params)) {
       return;
@@ -64,12 +64,14 @@ export class EventTrack {
     }
 
     if (data.length >= maxEvents) {
-      this.report(cloneDeep(data));
+      await this.report(cloneDeep(data));
     }
   }
 
   /**
    * 立即上报数据
+   *
+   * - 实际上是调用 `report.send` 发送数据
    *
    * @param {(EventParams | EventParams[])} data
    * @param {Callback} [beforeSend]
@@ -96,9 +98,16 @@ export class EventTrack {
     }
   }
 
+  /**
+   * 上报数据
+   *
+   * @private
+   * @param {EventParams[]} data
+   * @memberof EventTrack
+   */
   private async report(data: EventParams[]) {
     await this.clearReportData();
-    report.send(data, () => this.clearReportData());
+    report.send(data, async () => await this.clearReportData());
   }
 
   private validate(params: EventParams): boolean {

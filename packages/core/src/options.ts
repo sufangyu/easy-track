@@ -13,7 +13,7 @@ const getDefaultOptions = (): InitOptions => ({
     headers: {},
     reportType: 'http'
   },
-  cacheType: 'db', // 默认使用 storage
+  cacheType: 'storage',
   switchs: {
     eventTrack: true,
     xhr: true,
@@ -23,7 +23,7 @@ const getDefaultOptions = (): InitOptions => ({
     blankScreen: true,
     hashchange: true,
     history: false,
-    performance: false
+    performance: true
   },
   containerElements: ['html', 'body', '#app', '#root'],
   skeleton: false,

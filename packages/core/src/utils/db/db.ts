@@ -2,16 +2,13 @@ import { DBOptions, StoreParameter, TransactionType } from '../../types';
 
 export class TrackIndexedDB<T> {
   private dbNamesuffix: string;
-
   private _dbName: string = '';
-
   private dbName: string = '';
-
   private dbVersion: number;
-
   private db!: IDBDatabase;
-
   private stores: StoreParameter[] = [];
+  private isInitialized = false;
+  private unInitializedDataMap = new Map<string, T[]>();
 
   constructor(options: Pick<DBOptions, 'dbNamesuffix' | 'stores' | 'dbVersion'>) {
     const { dbVersion, dbNamesuffix, stores } = options;
@@ -21,12 +18,12 @@ export class TrackIndexedDB<T> {
   }
 
   /**
-   * 初始化连接数据库
+   * 打开或创建数据库
    *
    * @param {Pick<DBOptions, "dbName">} options
    * @memberof TrackIndexedDB
    */
-  init(options: Pick<DBOptions, 'dbName'>): Promise<void> {
+  async init(options: Pick<DBOptions, 'dbName'>): Promise<void> {
     const { dbName } = options;
     this._dbName = dbName;
     this.dbName = `${this._dbName}${this.dbNamesuffix}`;
@@ -43,6 +40,16 @@ export class TrackIndexedDB<T> {
 
       request.onsuccess = (event: Event) => {
         this.db = (event.target as IDBOpenDBRequest).result;
+        this.isInitialized = true;
+
+        // 数据库初始化后，将暂存的数据插入到数据库中然后清空暂存数据, 避免数据丢失
+        this.unInitializedDataMap.forEach((dataList, storeName) => {
+          dataList.forEach(async (item) => {
+            await this.add(storeName, item);
+          });
+        });
+        this.unInitializedDataMap.clear();
+
         resolve();
       };
 
@@ -53,7 +60,7 @@ export class TrackIndexedDB<T> {
   }
 
   /**
-   * 创建数据库表
+   * 创建数据库表/存储空间
    *
    * @private
    * @param {string} storeName
@@ -68,13 +75,36 @@ export class TrackIndexedDB<T> {
     }
   }
 
+  /**
+   * 获取数据库事务
+   *
+   * @private
+   * @param {string} storeName
+   * @param {TransactionType} transactionType
+   * @return {*}
+   * @memberof TrackIndexedDB
+   */
   private getTransaction(storeName: string, transactionType: TransactionType) {
+    if (!this.isInitialized) {
+      // throw new Error('Database not initialized');
+      return;
+    }
+
     return this.db.transaction(storeName, transactionType);
   }
 
+  /**
+   * 获取数据库对象存储
+   *
+   * @private
+   * @param {string} storeName
+   * @param {TransactionType} transactionType
+   * @return {*}
+   * @memberof TrackIndexedDB
+   */
   private getObjectStore(storeName: string, transactionType: TransactionType) {
     const transaction = this.getTransaction(storeName, transactionType);
-    const objectStore = transaction.objectStore(storeName);
+    const objectStore = transaction?.objectStore(storeName);
 
     return objectStore;
   }
@@ -89,13 +119,27 @@ export class TrackIndexedDB<T> {
    */
   add(storeName: string, item: T): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (!this.isInitialized) {
+        // 如果数据库未初始化，将数据存储在内存中
+        let curStoreUnInitializedData = this.unInitializedDataMap.get(storeName);
+        if (!curStoreUnInitializedData) {
+          curStoreUnInitializedData = [];
+          this.unInitializedDataMap.set(storeName, curStoreUnInitializedData);
+        }
+        curStoreUnInitializedData.push(item);
+        return;
+      }
+
       const transaction = this.getTransaction(storeName, TransactionType.Readwrite);
-      const objectStore = transaction.objectStore(storeName);
-      objectStore.add(item);
+      const objectStore = transaction!.objectStore(storeName);
+      // fix: 单纯使用时间戳作为主键可能会重复, 故需自定义主键（随机字符串+时间戳）
+      const uniqueKey = `${Math.random().toString(36).substr(2, 9)}-${(item as any).time || Date.now().toString()}`;
 
-      transaction.oncomplete = () => resolve();
+      objectStore.add({ id: uniqueKey, ...item });
 
-      transaction.onerror = (event: Event) => {
+      transaction!.oncomplete = () => resolve();
+
+      transaction!.onerror = (event: Event) => {
         reject((event.target as IDBTransaction).error);
       };
     });
@@ -110,9 +154,12 @@ export class TrackIndexedDB<T> {
    */
   get(storeName: string, primaryKey: string): Promise<T[] | undefined> {
     return new Promise((resolve, reject) => {
-      const objectStore = this.getObjectStore(storeName, TransactionType.Readonly);
+      if (!this.isInitialized) {
+        return;
+      }
 
-      const request = objectStore.get(primaryKey);
+      const objectStore = this.getObjectStore(storeName, TransactionType.Readonly);
+      const request = objectStore!.get(primaryKey);
 
       request.onsuccess = (event: Event) => {
         resolve((event.target as IDBRequest).result);
@@ -134,13 +181,17 @@ export class TrackIndexedDB<T> {
    */
   update(storeName: string, item: T): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (!this.isInitialized) {
+        return;
+      }
+
       const transaction = this.getTransaction(storeName, TransactionType.Readwrite);
-      const objectStore = transaction.objectStore(storeName);
+      const objectStore = transaction!.objectStore(storeName);
       objectStore.put(item);
 
-      transaction.oncomplete = () => resolve();
+      transaction!.oncomplete = () => resolve();
 
-      transaction.onerror = (event: Event) => {
+      transaction!.onerror = (event: Event) => {
         reject((event.target as IDBTransaction).error);
       };
     });
@@ -177,8 +228,12 @@ export class TrackIndexedDB<T> {
    */
   getCount(storeName: string): Promise<number> {
     return new Promise((resolve, reject) => {
+      if (!this.isInitialized) {
+        return;
+      }
+
       const objectStore = this.getObjectStore(storeName, TransactionType.Readonly);
-      const request = objectStore.count();
+      const request = objectStore!.count();
 
       request.onsuccess = (event: Event) => {
         resolve((event.target as IDBRequest).result);
@@ -199,10 +254,15 @@ export class TrackIndexedDB<T> {
    */
   getAll(storeName: string): Promise<T[] | undefined> {
     return new Promise((resolve, reject) => {
+      if (!this.isInitialized) {
+        return;
+      }
+
       const objectStore = this.getObjectStore(storeName, TransactionType.Readonly);
-      const request = objectStore.getAll();
+      const request = objectStore!.getAll();
 
       request.onsuccess = (event: Event) => {
+        console.log('获取表全部数据', (event.target as IDBRequest).result);
         resolve((event.target as IDBRequest).result);
       };
 
@@ -219,16 +279,22 @@ export class TrackIndexedDB<T> {
    * @return {*}  {Promise<void>}
    * @memberof TrackIndexedDB
    */
-  clear(storeName: string): Promise<void> {
+  async clear(storeName: string): Promise<void> {
     return new Promise((resolve, reject) => {
+      if (!this.isInitialized) {
+        return;
+      }
+
+      console.log('删除表数据');
+
       const transaction = this.getTransaction(storeName, TransactionType.Readwrite);
       const objectStore = this.getObjectStore(storeName, TransactionType.Readwrite);
 
-      objectStore.clear();
+      objectStore!.clear();
 
-      transaction.oncomplete = () => resolve();
+      transaction!.oncomplete = () => resolve();
 
-      transaction.onerror = (event: Event) => {
+      transaction!.onerror = (event: Event) => {
         reject((event.target as IDBTransaction).error);
       };
     });
