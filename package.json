@@ -32,8 +32,6 @@
     "vite-plugin-eslint": "^1.8.1"
   },
   "dependencies": {
-    "@easy-track/core": "workspace:^",
-    "@easy-track/vue3": "workspace:^",
     "lodash-es": "^4.17.21"
   }
 }

@@ -11,6 +11,8 @@ import NewsDetailView from "../views/NewsDetailView.vue";
 import ErrorView from "../views/ErrorView.vue";
 import EventTrackView from "../views/EventTrackView.vue";
 import RequestView from "../views/RequestView.vue";
+import ExposureOne from "../views/exposure/ExposureOne.vue";
+import ExposureTwo from "../views/exposure/ExposureTwo.vue";
 
 const routes = [
   { path: "/", component: HomeView },
@@ -20,6 +22,8 @@ const routes = [
   { path: "/error", component: ErrorView },
   { path: "/event-track", component: EventTrackView },
   { path: "/request", component: RequestView },
+  { path: "/exposure-one", component: ExposureOne },
+  { path: "/exposure-two", component: ExposureTwo },
 ];
 
 const router = createRouter({

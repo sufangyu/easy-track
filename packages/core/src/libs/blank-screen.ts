@@ -19,7 +19,7 @@ export const listenBlankScreen = () => {
     skeleton,
     containerElements,
     callback: (status) => {
-      eventTrack.send({
+      eventTrack.add({
         status: StatusType.Ok,
         type: EventType.BLANK_SCREEN,
         category: 'blank-screen',
@@ -31,7 +31,6 @@ export const listenBlankScreen = () => {
       });
     }
   });
-
   blankScreen.check();
 };
 
@@ -215,7 +214,7 @@ class BlankScreen {
       }
     }
 
-    // logger.log("空白无效点数量 =>>", emptyPoints, this.loopCount);
+    // logger.log('空白无效点数量 =>>', emptyPoints, this.loopCount);
 
     // 根据空白点数判断是否白屏 ----------------------------------------------------------
     if (emptyPoints !== 17) {

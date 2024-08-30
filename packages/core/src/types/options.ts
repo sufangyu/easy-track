@@ -57,6 +57,11 @@ export interface GlobalClickListenerItem {
   /**
    * 元素选择器
    *
+   * - 默认: [data-track], 即元素有 data-track 属性的元素
+   * - #ID
+   * - .class
+   * - tag
+   *
    * @type {string}
    * @memberof GlobalClickListenerItem
    */
@@ -87,16 +92,28 @@ export interface GlobalClickListenerItem {
 export interface Switch {
   /** 事件埋点 */
   eventTrack: boolean;
+  /** 元素曝光 */
+  exposureTrack: boolean;
+  /** XMLHttpRequest 请求 */
   xhr: boolean;
+  /** fetch 请求 */
   fetch: boolean;
+  /** 错误 */
   error: boolean;
+  /** 异步错误 */
   unhandledrejection: boolean;
+  /** 白屏检测 */
   blankScreen: boolean;
+  /** hashchange 模式页面监听 */
   hashchange: boolean;
+  /** history 模式页面监听 */
   history: boolean;
-  recordScreen: boolean;
+  /** 性能 */
   performance: boolean;
+  /** 加载资源 */
   resource: boolean;
+  /** 录屏 */
+  recordScreen: boolean;
 }
 
 /**
@@ -162,7 +179,7 @@ export interface InitOptions {
   report?: ReportOptions;
   /**
    * 数据存储类型
-   * 
+   *
    * - 建议使用 storage
    *
    * @type {CacheType}
@@ -171,6 +188,9 @@ export interface InitOptions {
   cacheType?: CacheType;
   /**
    * 全局点击监听器
+   *
+   * - 默认值: '[{ selector: '[data-track]' }]
+   * - 设置为空数组时, 表示全监听
    *
    * ```ts
    * // 示例

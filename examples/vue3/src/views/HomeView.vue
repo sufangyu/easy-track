@@ -13,8 +13,9 @@
       Go to About - replace
     </button>
     <RouterLink to="/error">错误页面</RouterLink>
-    <RouterLink to="/event-track">事件埋点</RouterLink>
+    <RouterLink to="/event-track">事件埋点 & 白屏检测</RouterLink>
     <RouterLink to="/request">网络请求</RouterLink>
+    <RouterLink to="/exposure-one">元素曝光</RouterLink>
   </nav>
 </template>
 

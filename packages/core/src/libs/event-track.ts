@@ -38,7 +38,7 @@ export const listenEventTrack = () => {
  */
 export const eventTrackCallback = () => (ev: PointerEvent) => {
   const el = getTargetDomByPointerEvent(ev);
-  const globalClickListeners = options.getGlobalClickListeners() ?? [];
+  const globalClickListeners = options.getGlobalClickListeners() ?? [{ selector: '[data-track]' }];
 
   if (!el) {
     return;

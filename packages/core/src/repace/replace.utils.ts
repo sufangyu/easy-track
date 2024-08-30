@@ -11,7 +11,8 @@ import {
   replaceHistoryReplaceState,
   replaceXHR,
   listenPageVisiable,
-  listenWebResource
+  listenWebResource,
+  listenExposureTrack
 } from '../libs';
 import { _global, eventEmitter } from '../utils';
 import { EventType, type ReplaceParams } from '../types';
@@ -30,6 +31,8 @@ const listenOrReplace = (type: EventType) => {
     [EventType.UNHANDLEDREJECTION]: listenUnhandledrejection,
 
     [EventType.EVENT_TRACK]: listenEventTrack,
+    [EventType.EXPOSURE_TRACK]: listenExposureTrack,
+
     [EventType.PV]: listenPageVisiable,
     [EventType.HASH_CHANGE]: listenHashChange,
     [EventType.HISTORY]: replaceHistory,

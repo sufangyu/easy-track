@@ -25,6 +25,11 @@ export const initReplace = () => {
     });
   }
 
+  // 元素曝光
+  if (siwtchMap[EventType.EXPOSURE_TRACK]) {
+    addListenOrReplace({ type: EventType.EXPOSURE_TRACK });
+  }
+
   // 全局错误
   if (siwtchMap[EventType.ERROR]) {
     addListenOrReplace({

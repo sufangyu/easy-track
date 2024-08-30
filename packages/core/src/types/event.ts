@@ -18,6 +18,7 @@ export const enum EventType {
   ERROR = 'error',
   UNHANDLEDREJECTION = 'unhandledrejection',
   EVENT_TRACK = 'event-track',
+  EXPOSURE_TRACK = 'exposure-track',
   PV = 'pv',
   HASH_CHANGE = 'hashchange',
   HISTORY = 'history',
@@ -49,10 +50,10 @@ interface EventParamsPerformance extends EventParamsBase {
   category: 'performance' | 'longtask' | 'resource' | 'memory';
 }
 
-// 埋点
+// 埋点、曝光
 interface EventParamsEventTrack extends EventParamsBase {
   type: EventType.EVENT_TRACK;
-  category: 'click';
+  category: 'click' | 'exposure';
 }
 
 // 错误

@@ -25,38 +25,6 @@ export const getUUID = (): string => {
 };
 
 /**
- * html 元素转字符串
- *
- * - tagName + id + class集合 + 文本
- *
- * @param {HTMLElement} target
- * @return {*}  {string}
- */
-export function htmlElementAsString(target: HTMLElement): string {
-  const tagName = target.tagName.toLowerCase();
-  if (tagName === 'body') {
-    return '';
-  }
-  let classNames = target.classList.value;
-
-  classNames = classNames !== '' ? ` class='${classNames}'` : '';
-  const id = target.id ? ` id="${target.id}"` : '';
-  const { innerText } = target;
-  return `<${tagName}${id}${classNames !== '' ? classNames : ''}>${innerText}</${tagName}>`;
-}
-
-/**
- * 据鼠标指针事件获取目标 DOM 元素
- *
- * @param {PointerEvent} ev 鼠标指针事件对象
- * @return {*}
- */
-export const getTargetDomByPointerEvent = (ev: PointerEvent): HTMLElement | null => {
-  const el = document.elementFromPoint(ev.pageX, ev.pageY);
-  return el ? (el as HTMLElement) : null;
-};
-
-/**
  * 格式化 URL
  *
  * @param {string} url

@@ -16,6 +16,7 @@ const getDefaultOptions = (): InitOptions => ({
   cacheType: 'storage',
   switchs: {
     eventTrack: true,
+    exposureTrack: true,
     xhr: true,
     fetch: true,
     error: true,
@@ -120,6 +121,7 @@ class Options {
   setSwitchMap() {
     const {
       eventTrack,
+      exposureTrack,
       xhr,
       fetch,
       error,
@@ -137,6 +139,7 @@ class Options {
     }
 
     this.switchMap[EventType.EVENT_TRACK] = eventTrack;
+    this.switchMap[EventType.EXPOSURE_TRACK] = exposureTrack;
     this.switchMap[EventType.XHR] = xhr;
     this.switchMap[EventType.FETCH] = fetch;
     this.switchMap[EventType.ERROR] = error;

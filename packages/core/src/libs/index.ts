@@ -6,5 +6,6 @@ export * from './page';
 export * from './error';
 export * from './unhandledrejection';
 export * from './event-track';
+export * from './exposure-track';
 export * from './fetch';
 export * from './xhr';
