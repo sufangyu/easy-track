@@ -5,3 +5,4 @@ export * from './event';
 export * from './report';
 export * from './request';
 export * from './cache';
+export * from './track';

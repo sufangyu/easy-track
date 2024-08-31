@@ -32,6 +32,7 @@ const getDefaultOptions = (): InitOptions => ({
   skeleton: false,
   maxEvents: 10,
   historyUrlsNum: 3,
+  exposureTrack: {},
   debug: false
 });
 
@@ -55,36 +56,10 @@ class Options {
   }
 
   get(): InitOptions {
-    const {
-      dsn,
-      appCode,
-      appVersion,
-      userId,
-      debug = false,
-      cacheType = 'normal',
-      containerElements = [],
-      skeleton = false,
-      maxEvents = 10,
-      filterHttpUrl,
-      checkHttpStatus,
-      historyUrlsNum
-    } = this.options;
-
     return {
-      dsn,
-      appCode,
-      appVersion,
-      userId,
-      debug,
-      cacheType,
-      containerElements,
-      skeleton,
+      ...this.options,
       report: this.getReport(),
-      globalClickListeners: this.getGlobalClickListeners(),
-      maxEvents,
-      filterHttpUrl,
-      checkHttpStatus,
-      historyUrlsNum
+      globalClickListeners: this.getGlobalClickListeners()
     };
   }
 

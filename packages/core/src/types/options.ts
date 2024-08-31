@@ -1,4 +1,5 @@
 import { EventType, ReportParams } from './event';
+import { ExposureTrackElement } from './track';
 
 /**
  * 用户 ID
@@ -267,6 +268,32 @@ export interface InitOptions {
    * @memberof InitOptions
    */
   historyUrlsNum?: number;
+  /**
+   *  元素曝光配置
+   */
+  exposureTrack?: {
+    /**
+     * 监控元素集合
+     * 
+     * - 默认值: '[data-exposure-track]'
+     * @type {ExposureTrackElement[]}
+     */
+    elements?: ExposureTrackElement[];
+    /**
+     * 曝光标记属性
+     * 
+     * - 默认值: 'data-exposure'
+     * @type {string}
+     */
+    exposureIdAttr?: string;
+    /**
+     * 最小曝光时间, 超过即表示为曝光
+     * 
+     * - 默认值: 500
+     * @type {number}
+     */
+    minObserveTime?: number;
+  };
   /**
    * 是否开启调试
    *

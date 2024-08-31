@@ -2,7 +2,8 @@ import 'intersection-observer';
 import { cloneDeep, isFunction } from 'lodash-es';
 
 import eventTrack from '../event';
-import { EventType, StatusType } from '../types';
+import options from '../options';
+import { EventType, ExposureObserveItem, ExposureTrackElement, StatusType } from '../types';
 import { getElementXPath, getTimestamp, htmlElementAsString, unknownToObject } from '../utils';
 
 /**
@@ -10,7 +11,11 @@ import { getElementXPath, getTimestamp, htmlElementAsString, unknownToObject } f
  *
  */
 export const listenExposureTrack = () => {
+  const { exposureTrack: exposureTrackOptions } = options.get();
   const exposureTrack = new ExposureTrack({
+    elements: exposureTrackOptions?.elements,
+    exposureIdAttr: exposureTrackOptions?.exposureIdAttr,
+    minObserveTime: exposureTrackOptions?.minObserveTime,
     callback(exposureLise) {
       eventTrack.add({
         type: EventType.EVENT_TRACK,
@@ -71,13 +76,13 @@ class ExposureTrack {
   /** 曝光检查循环时长 */
   private LOOP_TIME = 1000;
   /** 监控元素集合 */
-  private trackElements: TrackElement[] = [];
+  private trackElements: ExposureTrackElement[] = [];
   /** 元素采集标记的属性名 */
   private exposureIdAttr: string;
   /** 元素曝光信息列表 */
-  private observeList: ObserveItem[] = [];
+  private observeList: ExposureObserveItem[] = [];
   /** 回调函数 */
-  private callback?: (data: ObserveItem[]) => void;
+  private callback?: (data: ExposureObserveItem[]) => void;
 
   constructor(options?: ExposureOptions) {
     this.trackElements = options?.elements || [{ selector: '[data-exposure-track]' }];
@@ -322,11 +327,16 @@ interface ExposureOptions {
    * 曝光元素
    * - 默认值: '[data-exposure-track]'
    *
-   * @type {TrackElement[]}
+   * @type {ExposureTrackElement[]}
    * @memberof ExposureOptions
    */
-  elements?: TrackElement[];
-  /** 曝光标记属性 */
+  elements?: ExposureTrackElement[];
+  /**
+   * 曝光标记属性
+   *
+   * @type {string}
+   * @memberof ExposureOptions
+   */
   exposureIdAttr?: string;
   /**
    * 最小曝光时间, 超过即表示为曝光
@@ -342,35 +352,7 @@ interface ExposureOptions {
    *
    * @memberof ExposureOptions
    */
-  callback?: (data: ObserveItem[]) => void;
-}
-
-interface TrackElement {
-  selector?: string;
-  data?: string | Record<string, any>;
-}
-
-interface ObserveItem {
-  /** 标记唯一表示 */
-  id: string;
-  /** 标记元素 */
-  element?: Element;
-  /** 标记元素（字符串） */
-  selector?: string;
-  /** 标记元素在页面中的 XPath */
-  xPath: string;
-  /** 曝光元素名称 */
-  exposureName: string;
-  /** 曝光元素数据 */
-  exposureParams: Record<string, any> | string;
-  /** 开始曝光时间 */
-  startTime: number;
-  /** 结束曝光时间 */
-  endTime: number;
-  /** 曝光时长 */
-  exposureTime: number;
-  /** 是否已经上报 */
-  isReported?: boolean;
+  callback?: (data: ExposureObserveItem[]) => void;
 }
 
 export default ExposureTrack;

@@ -66,5 +66,10 @@ app
         data: "report data3",
       },
     ],
+    // exposureTrack: {
+    //   elements: [],
+    //   exposureIdAttr: 'xx',
+    //   minObserveTime: 30000,
+    // },
   })
   .mount("#app");
