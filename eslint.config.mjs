@@ -4,7 +4,6 @@
 import globals from 'globals';
 import js from '@eslint/js';
 // 兼容旧版本的包
-import { fixupPluginRules, fixupRule } from '@eslint/compat';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import eslintConfigPrettier from 'eslint-config-prettier';
