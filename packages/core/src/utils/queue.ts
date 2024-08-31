@@ -1,6 +1,7 @@
 import { isFunction } from 'lodash-es';
-import { VoidFunc } from '../types';
+
 import { _global } from './global';
+import { VoidFunc } from '../types';
 
 /**
  * 数据上报队列

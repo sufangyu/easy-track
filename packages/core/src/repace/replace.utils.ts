@@ -14,8 +14,8 @@ import {
   listenWebResource,
   listenExposureTrack
 } from '../libs';
-import { _global, eventEmitter } from '../utils';
 import { EventType, type ReplaceParams } from '../types';
+import { _global, eventEmitter } from '../utils';
 
 const listenOrReplace = (type: EventType) => {
   const listenOrReplaceFuncMap: Record<EventType, () => void> = {

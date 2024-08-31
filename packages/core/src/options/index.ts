@@ -1,8 +1,9 @@
 import { isArray, isEmpty, merge, uniqBy } from 'lodash-es';
-import { EventType, CacheType, Switch, SwitchMap, type InitOptions } from '../types';
-import { logger } from '../utils';
+
 import eventTrack from '../event';
 import report from '../report';
+import { EventType, CacheType, Switch, SwitchMap, type InitOptions } from '../types';
+import { logger } from '../utils';
 
 const getDefaultOptions = (): InitOptions => ({
   dsn: '',

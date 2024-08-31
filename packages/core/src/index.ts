@@ -2,6 +2,7 @@ import { initOptions } from './options';
 import { initReplace } from './repace';
 import { setupCache } from './setup';
 import { _global } from './utils';
+
 import type { InitOptions } from './types';
 
 /**

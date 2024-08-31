@@ -1,8 +1,9 @@
 import { isFunction, isString } from 'lodash-es';
+
+import eventTrack from '../event';
 import options from '../options';
 import { EventType, StatusType } from '../types';
 import { _global, getLocationHref, getTimestamp, logger } from '../utils';
-import eventTrack from '../event';
 
 /**
  * 监听白屏检测结果

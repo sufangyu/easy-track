@@ -1,4 +1,5 @@
 import { init } from '@easy-track/core';
+
 import type { InitOptions } from '@easy-track/core/types';
 
 /**

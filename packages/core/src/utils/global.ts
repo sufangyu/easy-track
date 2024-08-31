@@ -1,8 +1,8 @@
 import { UAParser } from 'ua-parser-js';
 
-import { EasyTrack, Global } from '../types';
-import { isWindow } from './is';
 import { getTimestamp } from './common';
+import { isWindow } from './is';
+import { EasyTrack, Global } from '../types';
 
 const ua = new UAParser().getResult();
 

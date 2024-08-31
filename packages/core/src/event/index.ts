@@ -1,9 +1,10 @@
 import { cloneDeep, isPlainObject } from 'lodash-es';
+
+import report from '../report';
+import { DB_EVENT_STORE_NAME } from '../setting';
+import { db, storage } from '../setup/cache/cache.utils';
 import { CacheType, Callback, EventOptions, EventParams } from '../types';
 import { logger } from '../utils';
-import report from '../report';
-import { db, storage } from '../setup/cache/cache.utils';
-import { DB_EVENT_STORE_NAME } from '../setting';
 
 /**
  * 事件追踪

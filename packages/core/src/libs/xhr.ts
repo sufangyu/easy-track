@@ -1,3 +1,4 @@
+import { checkIsIgnoreUrl } from './fetch';
 import options from '../options';
 import { EventType, HttpData, StatusType, VoidFunc } from '../types';
 import {
@@ -9,7 +10,6 @@ import {
   replaceAop,
   unknownToObject
 } from '../utils';
-import { checkIsIgnoreUrl } from './fetch';
 
 type XMLHttpRequestExtend = XMLHttpRequest & { xhrData: HttpData };
 

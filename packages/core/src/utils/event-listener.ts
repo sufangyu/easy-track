@@ -1,4 +1,5 @@
 import { isElement, isFunction } from 'lodash-es';
+
 import { NATIVE_EVENTS } from '../setting';
 
 interface Params {

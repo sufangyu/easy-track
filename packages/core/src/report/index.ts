@@ -1,4 +1,5 @@
 import { isArray, isFunction } from 'lodash-es';
+
 import {
   Callback,
   CommonReportParams,

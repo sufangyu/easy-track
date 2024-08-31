@@ -1,4 +1,8 @@
 import { throttle } from 'lodash-es';
+
+import eventTrack from '../event';
+import options from '../options';
+import { EventType, StatusType } from '../types';
 import {
   _global,
   eventEmitter,
@@ -11,9 +15,6 @@ import {
   on,
   unknownToObject
 } from '../utils';
-import { EventType, StatusType } from '../types';
-import options from '../options';
-import eventTrack from '../event';
 
 /**
  * 事件埋点

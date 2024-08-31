@@ -1,8 +1,9 @@
 import { onLCP, onFID, onCLS, onFCP, onTTFB, onINP, type Metric } from 'web-vitals';
+
 import { getCLS, getFCP, getFID, getLCP, getResources, getTTFB, isSafari, onFSP } from './utils';
+import eventTrack from '../../event';
 import { Callback, EventType, StatusType } from '../../types';
 import { _global, on, getTimestamp, eventEmitter } from '../../utils';
-import eventTrack from '../../event';
 
 /**
  * 性能监控

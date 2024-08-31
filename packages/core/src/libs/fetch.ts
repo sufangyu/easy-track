@@ -1,4 +1,6 @@
 import { isFunction } from 'lodash-es';
+
+import eventTrack from '../event';
 import options from '../options';
 import { EventType, HttpData, RequestMethod, StatusType } from '../types';
 import {
@@ -9,7 +11,6 @@ import {
   replaceAop,
   unknownToObject
 } from '../utils';
-import eventTrack from '../event';
 
 type FetchFunc = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
 

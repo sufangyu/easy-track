@@ -1,7 +1,8 @@
 import { isFunction, isString } from 'lodash-es';
-import { HttpData, HttpStatusCode, SpanStatus, StatusType } from '../types';
-import options from '../options';
+
 import { unknownToString } from './validate';
+import options from '../options';
+import { HttpData, HttpStatusCode, SpanStatus, StatusType } from '../types';
 
 /**
  * 截取字符串并拼接提示信息

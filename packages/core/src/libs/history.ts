@@ -1,4 +1,6 @@
 import { cloneDeep, takeRight } from 'lodash-es';
+
+import eventTrack from '../event';
 import options from '../options';
 import { EventType, RouteParams, StatusType, type VoidFunc } from '../types';
 import {
@@ -10,7 +12,6 @@ import {
   parseUrlToObj,
   replaceAop
 } from '../utils';
-import eventTrack from '../event';
 
 // 记录最后一次页面, 初始化时为当前页面
 let lastHref: string = getLocationHref();

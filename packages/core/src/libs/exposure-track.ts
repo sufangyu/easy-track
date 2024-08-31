@@ -1,8 +1,9 @@
 import 'intersection-observer';
 import { cloneDeep, isFunction } from 'lodash-es';
+
 import eventTrack from '../event';
-import { getElementXPath, getTimestamp, htmlElementAsString, unknownToObject } from '../utils';
 import { EventType, StatusType } from '../types';
+import { getElementXPath, getTimestamp, htmlElementAsString, unknownToObject } from '../utils';
 
 /**
  * 元素曝光监听

@@ -1,6 +1,6 @@
+import { db, storage } from './cache.utils';
 import options from '../../options';
 import { logger, checkIsIndexedDBSupported } from '../../utils';
-import { db, storage } from './cache.utils';
 
 // 初始化缓存
 const setupStorage = (appCode: string) => {

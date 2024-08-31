@@ -1,3 +1,4 @@
+import { addListenOrReplace } from './replace.utils';
 import {
   hashCallback,
   historyCallback,
@@ -10,7 +11,6 @@ import {
 import { errorCallback } from '../libs/error';
 import options from '../options';
 import { EventType } from '../types';
-import { addListenOrReplace } from './replace.utils';
 
 export const initReplace = () => {
   const siwtchMap = options.getSwitchMap();
