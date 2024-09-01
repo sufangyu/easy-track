@@ -3,8 +3,8 @@ import { cloneDeep, isPlainObject } from 'lodash-es';
 import report from '../report';
 import { DB_EVENT_STORE_NAME } from '../setting';
 import { db, storage } from '../setup/cache/cache.utils';
-import { CacheType, Callback, EventOptions, EventParams } from '../types';
-import { logger } from '../utils';
+import { CacheType, Callback, EventOptions, EventParams, EventType, StatusType } from '../types';
+import { __EASY_TRACK__, _global, logger } from '../utils';
 
 /**
  * 事件追踪
@@ -48,6 +48,8 @@ export class EventTrack {
       return;
     }
 
+    this.setErrorForRecordScreen(params);
+
     let data: EventParams[] = [];
     switch (cacheType) {
       case 'normal':
@@ -80,7 +82,29 @@ export class EventTrack {
    * @memberof Report
    */
   async send(data: EventParams | EventParams[], beforeSend?: Callback): Promise<void> {
+    this.setErrorForRecordScreen(data);
+
     report.send(data, beforeSend);
+  }
+
+  /**
+   * 设置错误状态
+   *
+   * - 当请求报错时出现错误时, 设置 `__EASY_TRACK__.hasError` 为 `true`,
+   *   用于上报当前时间段的操作录屏
+   *
+   * @private
+   * @param {EventParams} params
+   * @memberof EventTrack
+   */
+  private setErrorForRecordScreen(params: EventParams | EventParams[]) {
+    const paramsList = Array.isArray(params) ? params : [params];
+
+    paramsList.forEach((curParams) => {
+      if (curParams.type === EventType.REQUEST && curParams.status === StatusType.Error) {
+        __EASY_TRACK__.hasError = true;
+      }
+    });
   }
 
   private async clearReportData() {

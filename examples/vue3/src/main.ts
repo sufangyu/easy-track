@@ -71,5 +71,13 @@ app
     //   exposureIdAttr: 'xx',
     //   minObserveTime: 30000,
     // },
+    performance: {
+      filterLongtask:() => {
+        const curUrl = window.location.href;
+        if (curUrl.includes('/rrweb-player')) {
+          return true;
+        }
+      }
+    }
   })
   .mount("#app");

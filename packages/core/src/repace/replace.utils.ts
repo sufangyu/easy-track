@@ -12,7 +12,8 @@ import {
   replaceXHR,
   listenPageVisiable,
   listenWebResource,
-  listenExposureTrack
+  listenExposureTrack,
+  listenRecordScreen
 } from '../libs';
 import { EventType, type ReplaceParams } from '../types';
 import { _global, eventEmitter } from '../utils';
@@ -25,6 +26,7 @@ const listenOrReplace = (type: EventType) => {
 
     [EventType.XHR]: replaceXHR,
     [EventType.FETCH]: replaceFetch,
+    // 不用具体实现, 具体在 xhr、fetch
     [EventType.REQUEST]: () => {},
 
     [EventType.ERROR]: listenError,
@@ -32,6 +34,7 @@ const listenOrReplace = (type: EventType) => {
 
     [EventType.EVENT_TRACK]: listenEventTrack,
     [EventType.EXPOSURE_TRACK]: listenExposureTrack,
+    [EventType.RECORD_SCREEN]: listenRecordScreen,
 
     [EventType.PV]: listenPageVisiable,
     [EventType.HASH_CHANGE]: listenHashChange,

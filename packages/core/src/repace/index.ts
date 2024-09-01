@@ -30,6 +30,11 @@ export const initReplace = () => {
     addListenOrReplace({ type: EventType.EXPOSURE_TRACK });
   }
 
+  // 录屏
+  if (siwtchMap[EventType.RECORD_SCREEN]) {
+    addListenOrReplace({ type: EventType.RECORD_SCREEN });
+  }
+
   // 全局错误
   if (siwtchMap[EventType.ERROR]) {
     addListenOrReplace({

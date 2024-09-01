@@ -1,7 +1,9 @@
+import { isFunction } from 'lodash-es';
 import { onLCP, onFID, onCLS, onFCP, onTTFB, onINP, type Metric } from 'web-vitals';
 
 import { getCLS, getFCP, getFID, getLCP, getResources, getTTFB, isSafari, onFSP } from './utils';
 import eventTrack from '../../event';
+import options from '../../options';
 import { Callback, EventType, StatusType } from '../../types';
 import { _global, on, getTimestamp, eventEmitter } from '../../utils';
 
@@ -69,7 +71,13 @@ class WebPerformance {
    * @memberof WebPerformance
    */
   private getLongtask() {
+    const { performance } = options.get();
     const observer = new PerformanceObserver((entries) => {
+      // 过滤掉自定义的规则，如果返回 true 则不进行上报
+      if (isFunction(performance?.filterLongtask) && performance.filterLongtask()) {
+        return;
+      }
+
       for (const long of entries.getEntries()) {
         eventTrack.add({
           type: EventType.PERFORMANCE,

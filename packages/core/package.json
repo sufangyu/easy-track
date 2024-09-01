@@ -22,10 +22,14 @@
   "dependencies": {
     "error-stack-parser-es": "^0.1.5",
     "intersection-observer": "^0.12.2",
+    "js-base64": "^3.7.7",
+    "pako": "^2.1.0",
+    "rrweb": "2.0.0-alpha.4",
     "ua-parser-js": "^1.0.38",
     "web-vitals": "^4.2.3"
   },
   "devDependencies": {
+    "@types/pako": "^2.0.3",
     "@types/ua-parser-js": "^0.7.39"
   }
 }

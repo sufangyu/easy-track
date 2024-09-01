@@ -26,7 +26,8 @@ const getDefaultOptions = (): InitOptions => ({
     hashchange: true,
     history: false,
     performance: true,
-    resource: true
+    resource: true,
+    recordScreen: true
   },
   containerElements: ['html', 'body', '#app', '#root'],
   skeleton: false,
@@ -106,8 +107,8 @@ class Options {
       hashchange,
       history,
       performance,
-      resource
-      // recordScreen,
+      resource,
+      recordScreen
     } = this.getSwitchs();
 
     if (hashchange && history) {
@@ -116,6 +117,7 @@ class Options {
 
     this.switchMap[EventType.EVENT_TRACK] = eventTrack;
     this.switchMap[EventType.EXPOSURE_TRACK] = exposureTrack;
+    this.switchMap[EventType.RECORD_SCREEN] = recordScreen;
     this.switchMap[EventType.XHR] = xhr;
     this.switchMap[EventType.FETCH] = fetch;
     this.switchMap[EventType.ERROR] = error;

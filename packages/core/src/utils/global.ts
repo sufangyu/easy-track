@@ -20,7 +20,8 @@ export const __EASY_TRACK__: Partial<EasyTrack> = {
   },
   pv: {
     entryTime: getTimestamp()
-  }
+  },
+  hasError: false
 };
 
 /**

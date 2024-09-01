@@ -19,6 +19,7 @@ export const enum EventType {
   UNHANDLEDREJECTION = 'unhandledrejection',
   EVENT_TRACK = 'event-track',
   EXPOSURE_TRACK = 'exposure-track',
+  RECORD_SCREEN = 'record-screen',
   PV = 'pv',
   HASH_CHANGE = 'hashchange',
   HISTORY = 'history',
@@ -56,6 +57,12 @@ interface EventParamsEventTrack extends EventParamsBase {
   category: 'click' | 'exposure';
 }
 
+// 录屏
+interface EventParamsRecordScreen extends EventParamsBase {
+  type: EventType.RECORD_SCREEN;
+  category: 'record-screen';
+}
+
 // 错误
 interface EventParamsError extends EventParamsBase {
   type: EventType.ERROR | EventType.UNHANDLEDREJECTION | EventType.RESOURCE;
@@ -89,6 +96,7 @@ export type EventParams =
   | EventParamsError
   | EventParamsHttp
   | EventParamsEventTrack
+  | EventParamsRecordScreen
   | EventParamsPage;
 
 /**

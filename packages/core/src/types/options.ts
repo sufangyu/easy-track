@@ -168,7 +168,7 @@ export interface InitOptions {
   /**
    * 请求上报配置
    *
-   *  - headers: 自定义请求头
+   * - headers: 自定义请求头
    * - reportType: 上报类型
    * - format: 自定义上报格式
    * - customReport: 自定义上报方法
@@ -268,6 +268,19 @@ export interface InitOptions {
    * @memberof InitOptions
    */
   historyUrlsNum?: number;
+  /**
+   * 性能监控配置
+   *
+   * @memberof InitOptions
+   */
+  performance?: {
+    /**
+     * 过滤长任务上报, 默认上报所有长任务
+     * 
+     * - 返回 true 时不上报该长任务, 通常针对某个页面 URL 做判断
+     */
+    filterLongtask?: () => boolean;
+  };
   /**
    *  元素曝光配置
    */

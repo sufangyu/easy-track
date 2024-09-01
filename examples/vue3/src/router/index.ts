@@ -6,6 +6,7 @@ import {
 
 import HomeView from "../views/HomeView.vue";
 import AboutView from "../views/AboutView.vue";
+import RrwebPlayer from "../views/RrwebPlayer.vue";
 import NewsView from "../views/NewsView.vue";
 import NewsDetailView from "../views/NewsDetailView.vue";
 import ErrorView from "../views/ErrorView.vue";
@@ -17,6 +18,7 @@ import ExposureTwo from "../views/exposure/ExposureTwo.vue";
 const routes = [
   { path: "/", component: HomeView },
   { path: "/about", component: AboutView },
+  { path: "/rrweb-player", component: RrwebPlayer },
   { path: "/news", component: NewsView },
   { path: "/news-detail", component: NewsDetailView },
   { path: "/error", component: ErrorView },

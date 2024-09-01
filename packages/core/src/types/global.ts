@@ -15,28 +15,34 @@ export interface DeviceInfo {
 }
 
 export interface EasyTrack {
-  /** 设备信息 */
+  /**
+   * 设备信息
+   * - 
+   *
+   * @type {DeviceInfo}
+   * @memberof EasyTrack
+   */
   deviceInfo: DeviceInfo;
-  /** 页面信息 */
+  /**
+   * 页面信息
+   */
   pv: {
     /** 访问页面的时间 */
     entryTime: number;
   };
 
-  report: any;
-  // TODO: 给录屏使用
-  hasError: boolean;
-  recordScreenId: any;
+  /**
+   * 是否有错误
+   * - 有错误，会上报当前操作的前N秒录屏数据。
+   * - 在 数据类型 request 发生错误时, 会设置 hasError 为 true
+   *
+   * @type {boolean}
+   * @memberof EasyTrack
+   */
+  hasError?: boolean;
 }
 
 export interface Global extends Window {
-  // /**
-  //  * 是否已经初始化
-  //  *
-  //  * @type {boolean}
-  //  * @memberof Global
-  //  */
-  // __easyTracingInit__?: boolean;
   /**
    * 监控器对象
    *

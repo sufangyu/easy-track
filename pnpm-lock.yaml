@@ -87,6 +87,9 @@ importers:
       axios:
         specifier: ^1.7.4
         version: 1.7.4
+      rrweb-player:
+        specifier: 1.0.0-alpha.4
+        version: 1.0.0-alpha.4
       vue:
         specifier: ^3.4.35
         version: 3.4.37(typescript@5.5.4)
@@ -127,6 +130,15 @@ importers:
       intersection-observer:
         specifier: ^0.12.2
         version: 0.12.2
+      js-base64:
+        specifier: ^3.7.7
+        version: 3.7.7
+      pako:
+        specifier: ^2.1.0
+        version: 2.1.0
+      rrweb:
+        specifier: 2.0.0-alpha.4
+        version: 2.0.0-alpha.4
       ua-parser-js:
         specifier: ^1.0.38
         version: 1.0.38
@@ -134,6 +146,9 @@ importers:
         specifier: ^4.2.3
         version: 4.2.3
     devDependencies:
+      '@types/pako':
+        specifier: ^2.0.3
+        version: 2.0.3
       '@types/ua-parser-js':
         specifier: ^0.7.39
         version: 0.7.39
@@ -532,6 +547,9 @@ packages:
 
   '@tsconfig/node16@1.0.4':
     resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
+
+  '@tsconfig/svelte@1.0.13':
+    resolution: {integrity: sha512-5lYJP45Xllo4yE/RUBccBT32eBlRDbqN8r1/MIvQbKxW3aFqaYPCNgm8D5V20X4ShHcwvYWNlKg3liDh1MlBoA==}
 
   '@types/argparse@1.0.38':
     resolution: {integrity: sha512-ebDJ9b0e702Yr7pWgB0jzm+CX4Srzz8RcXtLJDJB+BSccqMa36uyH/zUsSYao5+BD1ytv3k3rPYCq4mAE1hsXA==}
@@ -1928,6 +1946,9 @@ packages:
   rrdom@0.1.7:
     resolution: {integrity: sha512-ZLd8f14z9pUy2Hk9y636cNv5Y2BMnNEY99wxzW9tD2BLDfe1xFxtLjB4q/xCBYo6HRe0wofzKzjm4JojmpBfFw==}
 
+  rrweb-player@1.0.0-alpha.4:
+    resolution: {integrity: sha512-Wlmn9GZ5Fdqa37vd3TzsYdLl/JWEvXNUrLCrYpnOwEgmY409HwVIvvA5aIo7k582LoKgdRCsB87N+f0oWAR0Kg==}
+
   rrweb-snapshot@2.0.0-alpha.17:
     resolution: {integrity: sha512-GBg5pV8LHOTbeVmH2VHLEFR0mc2QpQMzAvcoxEGfPNWgWHc8UvKCyq7pqN1vA+fDZ+yXXbixeO0kB2pzVvFCBw==}
 
@@ -2671,6 +2692,8 @@ snapshots:
   '@tsconfig/node14@1.0.3': {}
 
   '@tsconfig/node16@1.0.4': {}
+
+  '@tsconfig/svelte@1.0.13': {}
 
   '@types/argparse@1.0.38': {}
 
@@ -4207,6 +4230,11 @@ snapshots:
   rrdom@0.1.7:
     dependencies:
       rrweb-snapshot: 2.0.0-alpha.4
+
+  rrweb-player@1.0.0-alpha.4:
+    dependencies:
+      '@tsconfig/svelte': 1.0.13
+      rrweb: 2.0.0-alpha.4
 
   rrweb-snapshot@2.0.0-alpha.17:
     dependencies:
