@@ -27,7 +27,8 @@ const getDefaultOptions = (): InitOptions => ({
     history: false,
     performance: true,
     resource: true,
-    recordScreen: true
+    recordScreen: true,
+    network: true
   },
   containerElements: ['html', 'body', '#app', '#root'],
   skeleton: false,
@@ -108,7 +109,8 @@ class Options {
       history,
       performance,
       resource,
-      recordScreen
+      recordScreen,
+      network
     } = this.getSwitchs();
 
     if (hashchange && history) {
@@ -127,6 +129,7 @@ class Options {
     this.switchMap[EventType.HISTORY] = history;
     this.switchMap[EventType.PERFORMANCE] = performance;
     this.switchMap[EventType.RESOURCE] = resource;
+    this.switchMap[EventType.NETWORK] = network;
   }
 }
 

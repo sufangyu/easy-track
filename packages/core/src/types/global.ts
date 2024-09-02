@@ -1,3 +1,5 @@
+import { NetworkStatus } from './event';
+
 /**
  * 设备信息
  *
@@ -37,7 +39,6 @@ export interface EasyTrack {
     /** 访问页面的时间 */
     entryTime: number;
   };
-
   /**
    * 是否有错误
    * - 有错误，会上报当前操作的前N秒录屏数据。
@@ -47,6 +48,16 @@ export interface EasyTrack {
    * @memberof EasyTrack
    */
   hasError?: boolean;
+  /**
+   * 网络离线状态
+   *
+   * - NetworkStatus.ONLINE: 网络正常（默认值）
+   * - NetworkStatus.OFFLINE: 网络异常
+   *
+   * @type {NetworkStatus}
+   * @memberof EasyTrack
+   */
+  networkStatus: NetworkStatus;
 }
 
 export interface Global extends Window {

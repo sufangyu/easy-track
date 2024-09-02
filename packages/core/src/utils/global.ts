@@ -2,7 +2,7 @@ import { UAParser } from 'ua-parser-js';
 
 import { getTimestamp } from './common';
 import { isWindow } from './is';
-import { EasyTrack, Global } from '../types';
+import { EasyTrack, Global, NetworkStatus } from '../types';
 
 const ua = new UAParser().getResult();
 
@@ -21,7 +21,8 @@ export const __EASY_TRACK__: Partial<EasyTrack> = {
   pv: {
     entryTime: getTimestamp()
   },
-  hasError: false
+  hasError: false,
+  networkStatus: NetworkStatus.ONLINE
 };
 
 /**

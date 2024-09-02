@@ -23,5 +23,7 @@ export const NATIVE_EVENTS = [
   'replaceState',
   'pushState',
   'unhandledrejection',
-  'loadend'
+  'loadend',
+  'online',
+  'offline'
 ];

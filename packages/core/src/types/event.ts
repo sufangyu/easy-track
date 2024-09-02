@@ -12,6 +12,7 @@ export const enum EventType {
   BLANK_SCREEN = 'blank-screen',
   PERFORMANCE = 'performance',
   RESOURCE = 'resource',
+  NETWORK = 'network',
   XHR = 'xhr',
   FETCH = 'fetch',
   REQUEST = 'request',
@@ -43,6 +44,12 @@ interface EventParamsBase {
 interface EventParamsBlankScreen extends EventParamsBase {
   type: EventType.BLANK_SCREEN;
   category: 'blank-screen';
+}
+
+// 网络
+interface EventParamsNetwork extends EventParamsBase {
+  type: EventType.NETWORK;
+  category: NetworkStatus;
 }
 
 // 性能
@@ -92,6 +99,7 @@ interface EventParamsPage extends EventParamsBase {
  */
 export type EventParams =
   | EventParamsBlankScreen
+  | EventParamsNetwork
   | EventParamsPerformance
   | EventParamsError
   | EventParamsHttp
@@ -297,4 +305,15 @@ export interface ReplaceParams {
 export interface RouteParams {
   from: string;
   to: string;
+}
+
+/**
+ * 网络状态
+ *
+ * @export
+ * @enum {number}
+ */
+export enum NetworkStatus {
+  ONLINE = 'online',
+  OFFLINE = 'offline'
 }

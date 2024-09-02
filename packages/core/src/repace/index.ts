@@ -6,7 +6,8 @@ import {
   eventTrackCallback,
   httpCallback,
   pvCallback,
-  webResourceCallback
+  webResourceCallback,
+  networkCallback
 } from '../libs';
 import { errorCallback } from '../libs/error';
 import options from '../options';
@@ -33,6 +34,11 @@ export const initReplace = () => {
   // 录屏
   if (siwtchMap[EventType.RECORD_SCREEN]) {
     addListenOrReplace({ type: EventType.RECORD_SCREEN });
+  }
+
+  // 网络情况
+  if (siwtchMap[EventType.NETWORK]) {
+    addListenOrReplace({ type: EventType.NETWORK, callback: networkCallback() });
   }
 
   // 全局错误

@@ -10,3 +10,4 @@ export * from './exposure-track';
 export * from './record-screen';
 export * from './fetch';
 export * from './xhr';
+export * from './network';

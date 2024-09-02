@@ -115,6 +115,8 @@ export interface Switch {
   resource: boolean;
   /** 录屏 */
   recordScreen: boolean;
+  /** 网络 */
+  network: boolean;
 }
 
 /**
@@ -158,8 +160,7 @@ export interface InitOptions {
    */
   userId: UserIdType;
   /**
-   * 设备 ID
-   * - TODO: 改为浏览器指纹
+   * 设备唯一 ID 标识
    *
    * @type {string}
    * @memberof InitOptions
@@ -276,7 +277,7 @@ export interface InitOptions {
   performance?: {
     /**
      * 过滤长任务上报, 默认上报所有长任务
-     * 
+     *
      * - 返回 true 时不上报该长任务, 通常针对某个页面 URL 做判断
      */
     filterLongtask?: () => boolean;
@@ -287,21 +288,21 @@ export interface InitOptions {
   exposureTrack?: {
     /**
      * 监控元素集合
-     * 
+     *
      * - 默认值: '[data-exposure-track]'
      * @type {ExposureTrackElement[]}
      */
     elements?: ExposureTrackElement[];
     /**
      * 曝光标记属性
-     * 
+     *
      * - 默认值: 'data-exposure'
      * @type {string}
      */
     exposureIdAttr?: string;
     /**
      * 最小曝光时间, 超过即表示为曝光
-     * 
+     *
      * - 默认值: 500
      * @type {number}
      */

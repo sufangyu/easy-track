@@ -13,7 +13,8 @@ import {
   listenPageVisiable,
   listenWebResource,
   listenExposureTrack,
-  listenRecordScreen
+  listenRecordScreen,
+  listenNetwork
 } from '../libs';
 import { EventType, type ReplaceParams } from '../types';
 import { _global, eventEmitter } from '../utils';
@@ -23,6 +24,7 @@ const listenOrReplace = (type: EventType) => {
     [EventType.BLANK_SCREEN]: listenBlankScreen,
     [EventType.PERFORMANCE]: listenWebPerformance,
     [EventType.RESOURCE]: listenWebResource,
+    [EventType.NETWORK]: listenNetwork,
 
     [EventType.XHR]: replaceXHR,
     [EventType.FETCH]: replaceFetch,
