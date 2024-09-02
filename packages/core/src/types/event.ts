@@ -100,7 +100,7 @@ export type EventParams =
   | EventParamsPage;
 
 /**
- * 公共上报信息
+ * 公共信息
  */
 export interface CommonReportParams {
   /**
@@ -110,6 +110,37 @@ export interface CommonReportParams {
    * @memberof CommonReportParams
    */
   userId: string;
+  /**
+   * uuid
+   * - 使用浏览器指纹标识
+   *
+   * @type {string}
+   * @memberof CommonReportParams
+   */
+  uuid: string;
+  /**
+   * 基础信息
+   *
+   * @type {BaseInfo}
+   * @memberof CommonReportParams
+   */
+  baseInfo: BaseInfo;
+  /**
+   * 设备信息
+   *
+   * @type {DeviceInfo}
+   * @memberof CommonReportParams
+   */
+  deviceInfo: DeviceInfo;
+}
+
+/**
+ * 基础信息
+ *
+ * @export
+ * @interface BaseInfo
+ */
+export interface BaseInfo {
   /**
    * 域名
    *
@@ -125,13 +156,12 @@ export interface CommonReportParams {
    */
   href: string;
   /**
-   * uuid
-   * TODO: 改成浏览器指纹
+   * 来源地址
    *
    * @type {string}
-   * @memberof CommonReportParams
+   * @memberof BaseInfo
    */
-  uuid: string;
+  referer: string;
   /**
    * 浏览器信息
    *
@@ -140,12 +170,71 @@ export interface CommonReportParams {
    */
   userAgent: string;
   /**
-   * 设备信息
+   * 设备屏幕物理宽度
+   * - window.screen.width
    *
-   * @type {DeviceInfo}
-   * @memberof CommonReportParams
+   * @type {number}
+   * @memberof BaseInfo
    */
-  deviceInfo: DeviceInfo;
+  screenWidth: number;
+  /**
+   * 设备屏幕物理高度
+   * - window.screen.height
+   *
+   * @type {number}
+   * @memberof BaseInfo
+   */
+  screenHeight: number;
+  /**
+   * 页面内容宽度
+   * - document.body.clientWidth
+   *
+   * @type {number}
+   * @memberof BaseInfo
+   */
+  vireportWidth: number;
+  /**
+   * 页面内容高度
+   * - document.body.clientHeight
+   *
+   * @type {number}
+   * @memberof BaseInfo
+   */
+  vireportHeight: number;
+  /**
+   * 浏览器用户界面的语言
+   *
+   * @type {string}
+   * @memberof BaseInfo
+   */
+  language: string;
+  /**
+   * 设备像素比
+   * - window.devicePixelRatio
+   *
+   * @type {number}
+   * @memberof BaseInfo
+   */
+  dpr: number;
+  /**
+   * 网络类型
+   *
+   * - 2g, 3g, 4g, wifi
+   * - 只做参考, PC 端不一定准确
+   *
+   * @type {string}
+   * @memberof BaseInfo
+   */
+  networkType: string;
+  /**
+   * 网络速度
+   *
+   * - 直接使用 navigator.connection.downlink 的值
+   *
+   * @type {number}
+   * @memberof BaseInfo
+   */
+  networkSpeed: number;
 }
 
 /**
@@ -157,8 +246,31 @@ export type ReportParams = EventParams & CommonReportParams;
  * 事件上报配置
  */
 export interface EventOptions {
+  /**
+   * 应用编码
+   *
+   * @type {string}
+   * @memberof Options
+   */
   appCode: string;
+  /**
+   * 数据存储类型
+   *
+   * - 建议使用 storage
+   *
+   * @type {CacheType}
+   * @memberof InitOptions
+   */
   cacheType?: CacheType;
+  /**
+   * 待上传队列数据最大个数,
+   *
+   * - 默认 10
+   * - 超出该值时，会触发数据上报, 上报成功后清空数据
+   *
+   * @type {number}
+   * @memberof InitOptions
+   */
   maxEvents?: number;
 }
 

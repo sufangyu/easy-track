@@ -5,19 +5,26 @@
  * @interface DeviceInfo
  */
 export interface DeviceInfo {
+  /** 浏览器供应商或厂商 */
   browserVendor: string;
+  /** 浏览器版本 */
   browserVersion: string;
+  /** 操作系统类型 */
   os: string;
+  /** 操作系统版本 */
   osVersion: string;
+  /** 设备模型 */
   device: string;
+  /** 设备类型, 如:mobile、tablet */
   deviceType: string;
+  /** 设备供应商或厂商 */
   deviceVendor: string;
 }
 
 export interface EasyTrack {
   /**
    * 设备信息
-   * - 
+   * - 操作系统类型、版本；浏览器版本等
    *
    * @type {DeviceInfo}
    * @memberof EasyTrack

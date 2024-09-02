@@ -1,19 +1,58 @@
-// 获取当前时间戳
+/** 获取当前时间戳 */
 export const getTimestamp = () => Date.now();
 
-// 获取当前href
+/** 获取当前href */
 export const getLocationHref = () => window.location.href;
 
-// 获取当前域名
+/** 获取当前域名 */
 export const getCurrentDomain = () => window.location.host;
 
-// 获取当前页面路径
+/** 获取当前页面路径 */
 export const getCurrentHref = () => window.location.href;
 
-// 获取user-agent
+/** 获取当前来源地址 */
+export const getCurrentReferrer = () => document.referrer;
+
+/** 设备像素比 */
+export const getCurrentDpr = () => window.devicePixelRatio ?? '1';
+
+export const getCurrentLanguage = () => navigator.language ?? '';
+
+/**
+ * 获取当前页面尺寸信息
+ *
+ * @return {*}
+ */
+export const getCurrentSize = () => {
+  return {
+    screenWidth: window.screen.width,
+    screenHeight: window.screen.height,
+    viewportWidth: document.body.clientWidth,
+    viewportHeight: document.body.clientHeight
+  };
+};
+
+/**
+ * 获取当前网络信息
+ *
+ * @return {*}
+ */
+export const getCurrentNetworkInfo = () => {
+  const isSupport = 'connection' in navigator;
+  if (!isSupport) {
+    return null;
+  }
+
+  return navigator.connection;
+};
+
+/** 获取user-agent */
 export const getUserAgent = () => navigator.userAgent;
 
-// 获取uuid
+/**
+ * 获取uuid
+ * @returns
+ */
 export const getUUID = (): string => {
   let d = new Date().getTime();
   const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {

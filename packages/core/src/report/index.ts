@@ -1,6 +1,8 @@
+import { load } from '@fingerprintjs/fingerprintjs';
 import { isArray, isFunction } from 'lodash-es';
 
 import {
+  BaseInfo,
   Callback,
   CommonReportParams,
   EventParams,
@@ -16,13 +18,25 @@ import {
   getCurrentDomain,
   getCurrentHref,
   getUserAgent,
-  getUUID
+  getCurrentReferrer,
+  getCurrentDpr,
+  getCurrentSize,
+  getCurrentNetworkInfo,
+  getCurrentLanguage
 } from '../utils';
 
 export class Report {
   private options!: ReportClassOptions;
 
   private queue = new Queue();
+
+  private uuid!: string;
+
+  constructor() {
+    load()
+      .then((fp) => fp.get())
+      .then((result) => (this.uuid = result.visitorId));
+  }
 
   setOptions(options: ReportClassOptions) {
     this.options = options;
@@ -39,9 +53,37 @@ export class Report {
   }
 
   /**
+   * 获取基础信息
+   *
+   * @private
+   * @return {*}  {BaseInfo}
+   * @memberof Report
+   */
+  private getBaseInfo(): BaseInfo {
+    const curSize = getCurrentSize();
+    const curConnection = getCurrentNetworkInfo();
+
+    const baseInfo: BaseInfo = {
+      domain: getCurrentDomain(),
+      href: getCurrentHref(),
+      referer: getCurrentReferrer(),
+      userAgent: getUserAgent(),
+      screenWidth: curSize.screenWidth,
+      screenHeight: curSize.screenHeight,
+      vireportWidth: curSize.viewportWidth,
+      vireportHeight: curSize.viewportHeight,
+      language: getCurrentLanguage(),
+      dpr: getCurrentDpr(),
+      networkType: curConnection?.effectiveType || '',
+      networkSpeed: curConnection?.downlink ?? 0
+    };
+    return baseInfo;
+  }
+
+  /**
    * 获取公共上报数据
    *
-   * TODO: 增加屏幕信息、DPR、网络信息、浏览器指纹等
+   * TODO: 网络信息等
    *
    * @return {*}  {CommonReportParams}
    * @memberof Report
@@ -49,10 +91,8 @@ export class Report {
   getCommonReportData(): CommonReportParams {
     return {
       userId: this.getUserId(),
-      uuid: getUUID(),
-      domain: getCurrentDomain(),
-      href: getCurrentHref(),
-      userAgent: getUserAgent(),
+      uuid: this.uuid,
+      baseInfo: this.getBaseInfo(),
       deviceInfo: __EASY_TRACK__.deviceInfo!
     };
   }
@@ -83,7 +123,6 @@ export class Report {
     const currentData = isArray(data) ? data : [data];
     const { dsn: url, format, customReport, reportType = 'http', isReport } = this.options;
 
-    // TODO: 分开上报数据和基础公共数据
     let reportData = currentData.map((item) => this.getReportData(item));
     reportData = isFunction(format) ? format(reportData) : reportData;
 

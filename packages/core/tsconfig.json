@@ -12,6 +12,6 @@
     "strict": true,
     "esModuleInterop": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "./shims-dom.d.ts"],
   "exclude": ["node_modules", "dist"]
 }
