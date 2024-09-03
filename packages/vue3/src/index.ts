@@ -1,13 +1,13 @@
 import { eventEmitter, EventType, init, type InitOptions } from '@easy-track/core';
 
 import { ViewModel, Plugin } from './types';
-import pkg from '../package.json';
+import { version } from '../package.json';
 
 /**
  *  监控插件
 /** @type {*} */
 const easyTrackPlugin: Plugin = {
-  version: pkg.version,
+  version,
   /**
    * 安装插件
    *
