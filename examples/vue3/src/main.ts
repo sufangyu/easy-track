@@ -49,10 +49,28 @@ app
     uuid: () => '1234567890',
 
     report: {
-      // reportType: 'img'
-      // headers: () => ({
-      //   'X-Custom-Header': '自定义请求头-xxx'
-      // })
+      headers: {
+        'X-Custom-Header': '自定义请求头-xxx'
+      },
+      format: (data: any[]) => {
+        return data.map((it) => ({
+          ...it,
+          custom: '这是格式化后的上报数据'
+        }));
+      }
+      // customReport: (data: any[]) => {
+      //   console.log('这是自定义上报方法', data);
+      //   fetch('https://easytrack.dev/api/xxx', {
+      //     method: 'POST',
+      //     headers: {
+      //       'Content-Type': 'application/json'
+      //     },
+      //     body: JSON.stringify(data)
+      //   });
+      // },
+      // isReport: (data: any[]) => {
+      //   return !(data.length > 5);
+      // }
     },
 
     log: true,

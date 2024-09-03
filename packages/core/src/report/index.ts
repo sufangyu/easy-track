@@ -129,16 +129,16 @@ export class Report {
     let reportData = currentData.map((item) => this.getReportData(item));
     reportData = isFunction(format) ? format(reportData) : reportData;
 
-    // 当前不上报
+    // 当前数据不上报
     if (isFunction(isReport) && !isReport(reportData)) {
-      logger.log('Cancel Report', reportData);
+      logger.log('取消上报:', reportData);
       return;
     }
 
     logger.log('上报数据:', reportData);
     isFunction(beforeSend) && beforeSend?.();
 
-    // 自定义上报
+    // 自定义上报函数
     if (isFunction(customReport)) {
       customReport(reportData);
       return;
