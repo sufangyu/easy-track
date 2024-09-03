@@ -151,6 +151,18 @@ export class EventTrack {
   }
 }
 
+/**
+ * 监控事件
+ *
+ * - add: (params: EventParams): Promise<void>
+ *     - 添加上报数据到待上报队列中 & 缓存中, 达到/超出队列个数最大限制, 达到则上报数据
+ *     - params: 添加的数据
+ *
+ * - send: (data: EventParams | EventParams[], beforeSend?: Callback): Promise<void>
+ *     - 立即上报数据, 实际上是调用 report.send 发送数据
+ *     - data: 上报数据
+ *     - beforeSend: 发送前回调
+ */
 const eventTrack = new EventTrack();
 
 export default eventTrack;

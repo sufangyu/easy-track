@@ -34,10 +34,10 @@ export const errorCallback: () => (
     message?: string;
   }
 ) => void = () => (ev) => {
-  const { target, error = '' } = ev;
+  const { target, error = '', message = '' } = ev;
 
-  if (target && !target?.localName) {
-    // 语法错误
+  // 语法错误
+  if (!target?.localName) {
     const [stackFrame] = parse(!target ? ev : error);
     const { fileName = '', functionName = '', columnNumber: column, lineNumber: line } = stackFrame;
 
@@ -50,7 +50,8 @@ export const errorCallback: () => (
       fileName,
       functionName,
       line,
-      column
+      column,
+      message
     };
     eventTrack.send({
       type: EventType.ERROR,
@@ -61,6 +62,7 @@ export const errorCallback: () => (
     });
   }
 
+  // 资源加载报错
   if (target?.localName) {
     // 资源加载错误
     const url = target?.src || target?.href || '';

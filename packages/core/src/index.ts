@@ -1,9 +1,9 @@
+import eventTrack from './event';
 import { initOptions } from './options';
 import { initReplace } from './repace';
 import { setupCache } from './setup';
-import { _global } from './utils';
-
-import type { InitOptions } from './types';
+import { EventType, StatusType, type InitOptions } from './types';
+import { _global, eventEmitter } from './utils';
 
 /**
  * 初始化函数
@@ -24,4 +24,4 @@ const init = async (options: InitOptions) => {
   initReplace();
 };
 
-export { init, type InitOptions };
+export { init, eventTrack, eventEmitter, EventType, StatusType, type InitOptions };

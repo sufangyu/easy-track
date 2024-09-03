@@ -1,18 +1,32 @@
-import { init } from '@easy-track/core';
+import { eventEmitter, EventType, init, type InitOptions } from '@easy-track/core';
 
-import type { InitOptions } from '@easy-track/core/types';
+import { ViewModel, Plugin } from './types';
+import pkg from '../package.json';
 
 /**
- * 注册插件
- *
- * @param {*} _app
- * @param {InitOptions} options
- */
-function install(_app: any, options: InitOptions) {
-  console.log('vue3 install', options);
-  init(options);
-}
+ *  监控插件
+/** @type {*} */
+const easyTrackPlugin: Plugin = {
+  version: pkg.version,
+  /**
+   * 安装插件
+   *
+   * @param {*} app
+   * @param {InitOptions} options
+   */
+  install(app: any, options: InitOptions) {
+    init(options);
 
-export default install;
+    // Vue3 全局错误处理
+    const handlerOrigin = app?.config?.errorHandler;
 
+    // 重写 Vue3 全局错误处理
+    app.config.errorHandler = function (err: Error, vm: ViewModel, info: string): void {
+      eventEmitter.emit(EventType.ERROR, err);
+      handlerOrigin && handlerOrigin.apply(null, [err, vm, info]);
+    };
+  }
+};
+
+export default easyTrackPlugin;
 export * from '@easy-track/core';

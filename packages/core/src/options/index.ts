@@ -202,7 +202,6 @@ const validateOption = (value: any, targetName: string, expectType: string): boo
 };
 
 const _validateInitOption = (options: InitOptions): boolean => {
-  console.log('当前初始化参数 =>>', options);
   const {
     dsn,
     appCode,

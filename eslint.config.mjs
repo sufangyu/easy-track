@@ -65,12 +65,12 @@ export default [
               pattern: 'element-plus',
               group: 'external'
               // position: 'before'
+            },
+            {
+              pattern: '{@easy-track/**}',
+              group: 'internal',
+              position: 'after'
             }
-            // {
-            //   pattern: '{@share/**,@main/**,@renderer/**}',
-            //   group: 'internal',
-            //   position: 'after'
-            // },
             // {
             //   pattern: '{@core/**,@layout/**,@components/**,@store/**,@router/**,@modules/**}',
             //   group: 'parent',

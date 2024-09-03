@@ -8,7 +8,7 @@ import { CacheType } from './options';
  * @export
  * @enum {number}
  */
-export const enum EventType {
+export enum EventType {
   BLANK_SCREEN = 'blank-screen',
   PERFORMANCE = 'performance',
   RESOURCE = 'resource',
@@ -28,7 +28,13 @@ export const enum EventType {
   HISTORY_REPLACESTATE = 'history-replaceState'
 }
 
-export const enum StatusType {
+/**
+ * 事件状态
+ *
+ * @export
+ * @enum {number}
+ */
+export enum StatusType {
   Ok = 'ok',
   Error = 'error'
 }

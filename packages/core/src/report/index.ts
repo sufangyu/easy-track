@@ -37,7 +37,7 @@ export class Report {
     const { uuid } = optionsInstance.get();
 
     if (uuid) {
-      this.uuid = uuid;
+      this.uuid = isFunction(uuid) ? uuid() : uuid;
     } else {
       load()
         .then((fp) => fp.get())

@@ -15,8 +15,6 @@ import { EventType } from '../types';
 
 export const initReplace = () => {
   const siwtchMap = options.getSwitchMap();
-  // eslint-disable-next-line no-console
-  console.log('initReplace siwtchMap', siwtchMap);
 
   // 事件埋点
   if (siwtchMap[EventType.EVENT_TRACK]) {

@@ -1,13 +1,10 @@
-import { InitOptions } from '@easy-track/core/types';
+import { Plugin as Plugin_2 } from './types';
 
 /**
- * 注册插件
- *
- * @param {*} _app
- * @param {InitOptions} options
- */
-declare function install(_app: any, options: InitOptions): void;
-export default install;
+ *  监控插件
+ /** @type {*} */
+declare const easyTrackPlugin: Plugin_2;
+export default easyTrackPlugin;
 
 
 export * from "@easy-track/core";

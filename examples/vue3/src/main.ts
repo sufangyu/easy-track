@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 // import WebTracing from '@web-tracing/vue3';
 // import webSee from '@websee/core';
-import EasyTrack from '@easy-track/vue3';
+import EasyTrack, { type InitOptions } from '@easy-track/vue3';
 import './tailwind.css';
 import './style.css';
 import App from './App.vue';
@@ -36,7 +36,7 @@ app
   //   maxBreadcrumbs: 5,
   // })
 
-  .use(EasyTrack, {
+  .use<InitOptions>(EasyTrack, {
     dsn: 'https://easytrack.dev/api',
     appCode: 'vue3-demo',
     // appVersion: 111,
