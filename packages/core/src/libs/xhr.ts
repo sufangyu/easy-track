@@ -1,10 +1,11 @@
+import { isFunction } from 'lodash-es';
+
 import { checkIsIgnoreUrl } from './fetch';
 import options from '../options';
 import { EventType, HttpData, StatusType, VoidFunc } from '../types';
 import {
   eventEmitter,
   getTimestamp,
-  isFunction,
   on,
   parseResponseHeaders,
   replaceAop,

@@ -1,9 +1,11 @@
-import { isArray, isEmpty, merge, uniqBy } from 'lodash-es';
+/* eslint-disable no-console */
+import { isArray, isUndefined, merge, uniqBy } from 'lodash-es';
 
 import eventTrack from '../event';
 import report from '../report';
+import { PACKAGES_NAME } from '../setting';
 import { EventType, CacheType, Switch, SwitchMap, type InitOptions } from '../types';
-import { logger } from '../utils';
+import { isTypeofAny, logger } from '../utils';
 
 const getDefaultOptions = (): InitOptions => ({
   dsn: '',
@@ -53,8 +55,6 @@ class Options {
     const { options } = this;
     this.options = merge(options, otps);
     this.setSwitchMap();
-    // TODO: 校验参数
-    // this.validate();
   }
 
   get(): InitOptions {
@@ -140,18 +140,18 @@ class Options {
  * @param {string} name 名称
  * @return {*}  {boolean}
  */
-function _validateOptionMustFill(val: any, name: string): boolean {
+const validateOptionMustFill = (val: any, name: string): boolean => {
   if (typeof val === 'function') {
     return true;
   }
 
-  if (isEmpty(val)) {
-    logger.warn(`【${name}】参数必填`);
+  if (isUndefined(val)) {
+    console.warn(`【${name}】参数必填`);
     return false;
   }
 
   return true;
-}
+};
 
 /**
  * 必传校验
@@ -159,30 +159,157 @@ function _validateOptionMustFill(val: any, name: string): boolean {
  * @param {Options} options
  * @return {*}  {boolean}
  */
-function _validateMustFill(options: InitOptions): boolean {
+const _validateMustFill = (options: InitOptions): boolean => {
   const validateList: boolean[] = [
-    _validateOptionMustFill(options.dsn, 'dsn'),
-    _validateOptionMustFill(options.appCode, 'appCode'),
-    _validateOptionMustFill(options.userId, 'userId')
+    validateOptionMustFill(options.dsn, 'dsn'),
+    validateOptionMustFill(options.appCode, 'appCode'),
+    validateOptionMustFill(options.userId, 'userId')
   ];
 
   return validateList.every((res) => !!res);
-}
+};
+
+/**
+ * 验证选项的类型是否符合要求
+ * @param value 值
+ * @param targetName 对象名
+ * @param expectType 期望类型
+ * @returns 是否通过验证
+ */
+const validateOption = (value: any, targetName: string, expectType: string): boolean => {
+  // console.log(
+  //   '当前参数:',
+  //   targetName,
+  //   '值 =>',
+  //   value,
+  //   '类型 =>',
+  //   isTypeofAny(value),
+  //   '期望类型 =>',
+  //   expectType,
+  //   '结果=>',
+  //   !value || isTypeofAny(value) === expectType
+  // );
+
+  if (!value || isTypeofAny(value) === expectType) {
+    return true;
+  }
+
+  console.error(
+    `[${PACKAGES_NAME}]:`,
+    `参数类型错误!【${targetName}】期望传入${expectType}类型，目前是${isTypeofAny(value)}类型`
+  );
+  return false;
+};
+
+const _validateInitOption = (options: InitOptions): boolean => {
+  console.log('当前初始化参数 =>>', options);
+  const {
+    dsn,
+    appCode,
+    appVersion,
+    userId,
+    uuid,
+    report,
+    cacheType,
+    globalClickListeners,
+    containerElements,
+    skeleton,
+    switchs,
+    maxEvents,
+    checkHttpStatus,
+    filterHttpUrl,
+    historyUrlsNum,
+    performance,
+    exposureTrack,
+    debug
+  } = options;
+
+  const validateList = [
+    validateOption(dsn, 'dsn', 'string'),
+    validateOption(appCode, 'appCode', 'string'),
+    validateOption(appVersion, 'appVersion', 'string'),
+
+    validateOption(cacheType, 'cacheType', 'string'),
+    validateOption(globalClickListeners, 'globalClickListeners', 'array'),
+    validateOption(containerElements, 'containerElements', 'array'),
+    validateOption(skeleton, 'skeleton', 'boolean'),
+    validateOption(switchs, 'switchs', 'object'),
+    validateOption(maxEvents, 'maxEvents', 'number'),
+    validateOption(checkHttpStatus, 'checkHttpStatus', 'function'),
+    validateOption(filterHttpUrl, 'filterHttpUrl', 'function'),
+    validateOption(historyUrlsNum, 'historyUrlsNum', 'number'),
+    validateOption(debug, 'debug', 'boolean')
+  ];
+
+  // userId
+  if (userId && typeof userId === 'function') {
+    validateList.push(validateOption(userId, 'userId', 'function'));
+  } else {
+    validateList.push(validateOption(userId, 'userId', 'string'));
+  }
+
+  // uuid
+  if (uuid && typeof uuid === 'function') {
+    validateList.push(validateOption(uuid, 'uuid', 'function'));
+  } else {
+    validateList.push(validateOption(uuid, 'uuid', 'string'));
+  }
+
+  // 上报配置
+  if (report && typeof report === 'object') {
+    if (typeof report.headers === 'function') {
+      validateList.push(validateOption(report.headers, 'report.headers', 'function'));
+    } else {
+      validateList.push(validateOption(report.headers, 'report.headers', 'object'));
+    }
+    validateList.push(validateOption(report.reportType, 'report.reportType', 'string'));
+    validateList.push(validateOption(report.format, 'report.format', 'function'));
+    validateList.push(validateOption(report.customReport, 'report.customReport', 'function'));
+    validateList.push(validateOption(report.isReport, 'report.isReport', 'function'));
+  }
+
+  // 性能
+  if (performance) {
+    validateList.push(
+      validateOption(performance.filterLongtask, 'performance.filterLongtask', 'function')
+    );
+  }
+
+  // 曝光配置
+  validateList.push(validateOption(exposureTrack, 'exposureTrack', 'object'));
+  validateList.push(validateOption(exposureTrack?.elements, 'exposureTrack.elements', 'array'));
+  validateList.push(
+    validateOption(exposureTrack?.exposureIdAttr, 'exposureTrack.exposureIdAttr', 'string')
+  );
+  validateList.push(
+    validateOption(exposureTrack?.minObserveTime, 'exposureTrack.minObserveTime', 'number')
+  );
+
+  return validateList.every((res) => !!res);
+};
 
 export const options = new Options();
 
+export default options;
+
+/**
+ * 初始化配置
+ *
+ * @param {InitOptions} initOptions 初始化参数
+ * @return {*}  {boolean}
+ */
 export function initOptions(initOptions: InitOptions): boolean {
   const { debug } = initOptions;
   logger.setFlag(debug);
 
-  // 必传校验 && TODO: 入参类型校验
-  if (!_validateMustFill(initOptions)) {
+  // 必传校验 && 入参类型校验
+  if (!_validateMustFill(initOptions) || !_validateInitOption(initOptions)) {
+    console.error(`[${PACKAGES_NAME}]:`, '初始化失败, 请检查初始化参数');
     return false;
   }
 
   options.set(initOptions);
   const curOptions = options.get();
-  console.log('curOptions', curOptions);
 
   const { dsn, report: reportOptions, appCode, cacheType, maxEvents, userId } = curOptions;
 
@@ -202,5 +329,3 @@ export function initOptions(initOptions: InitOptions): boolean {
 
   return true;
 }
-
-export default options;

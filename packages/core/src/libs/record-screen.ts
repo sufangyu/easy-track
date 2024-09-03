@@ -129,8 +129,10 @@ const unzipData = (b64Data: string) => {
   const chunk = 8 * 1024;
   let i;
   for (i = 0; i < data.length / chunk; i++) {
+    // @ts-ignore
     str += String.fromCharCode.apply(null, data.slice(i * chunk, (i + 1) * chunk));
   }
+  // @ts-ignore
   str += String.fromCharCode.apply(null, data.slice(i * chunk));
 
   const unzipStr = Base64.decode(str);

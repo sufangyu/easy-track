@@ -43,7 +43,8 @@ export const getCurrentNetworkInfo = () => {
     return null;
   }
 
-  return navigator.connection;
+  // @ts-ignore
+  return navigator.connection ?? null;
 };
 
 /** 获取user-agent */

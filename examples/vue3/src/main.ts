@@ -1,11 +1,11 @@
-import { createApp } from "vue";
-import WebTracing from "@web-tracing/vue3";
-import webSee from "@websee/core";
-import EasyTrack from "@easy-track/vue3";
-import "./tailwind.css";
-import "./style.css";
-import App from "./App.vue";
-import router from "./router";
+import { createApp } from 'vue';
+// import WebTracing from '@web-tracing/vue3';
+// import webSee from '@websee/core';
+import EasyTrack from '@easy-track/vue3';
+import './tailwind.css';
+import './style.css';
+import App from './App.vue';
+import router from './router';
 
 const app = createApp(App);
 
@@ -37,42 +37,53 @@ app
   // })
 
   .use(EasyTrack, {
-    dsn: "https://easytrack.dev/api",
-    appCode: "vue3-demo",
-    report: {
-      // reportType: "img",
-      headers: {
-        "X-Custom-Header": "自定义请求头-xxx",
-      },
-    },
+    dsn: 'https://easytrack.dev/api',
+    appCode: 'vue3-demo',
+    // appVersion: 111,
+
+    // userId: 101,
     userId: () => {
-      return "xxxxx";
+      return 'xxxxx';
     },
-    // maxEvents: 20,
+
+    uuid: () => '1234567890',
+
+    report: {
+      // reportType: 'img'
+      // headers: () => ({
+      //   'X-Custom-Header': '自定义请求头-xxx'
+      // })
+    },
+
     log: true,
     skeleton: true,
+
+    maxEvents: 20,
+
     globalClickListeners: [
       {
-        selector: ".cla", // 选择器
-        data: "report data1", // 上报数据
+        selector: '.cla', // 选择器
+        data: 'report data1' // 上报数据
       },
       {
-        elementText: "report2", // 元素文本
-        data: "report data2",
+        elementText: 'report2', // 元素文本
+        data: 'report data2'
       },
       {
-        selector: ".r", // 选择器 + 元素文本
-        elementText: "report3",
-        data: "report data3",
-      },
+        selector: '.r', // 选择器 + 元素文本
+        elementText: 'report3',
+        data: 'report data3'
+      }
     ],
+
     // exposureTrack: {
     //   elements: [],
     //   exposureIdAttr: 'xx',
     //   minObserveTime: 30000,
     // },
+
     performance: {
-      filterLongtask:() => {
+      filterLongtask: () => {
         const curUrl = window.location.href;
         if (curUrl.includes('/rrweb-player')) {
           return true;
@@ -80,4 +91,4 @@ app
       }
     }
   })
-  .mount("#app");
+  .mount('#app');

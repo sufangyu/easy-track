@@ -90,6 +90,12 @@ export interface GlobalClickListenerItem {
   data?: string | Record<string, any>;
 }
 
+/**
+ * 功能开关配置
+ *
+ * @export
+ * @interface Switch
+ */
 export interface Switch {
   /** 事件埋点 */
   eventTrack: boolean;
@@ -120,7 +126,7 @@ export interface Switch {
 }
 
 /**
- * 功能开关
+ * 功能开关 Map
  */
 export type SwitchMap = Record<EventType, boolean>;
 
@@ -160,12 +166,14 @@ export interface InitOptions {
    */
   userId: UserIdType;
   /**
-   * 设备唯一 ID 标识
+   * 设备唯一 ID
    *
-   * @type {string}
+   * - 不传则使用 fp 浏览器只为作为标识
+   *
+   * @type {string | (() => string)}
    * @memberof InitOptions
    */
-  uuid?: string;
+  uuid?: string | (() => string);
   /**
    * 请求上报配置
    *

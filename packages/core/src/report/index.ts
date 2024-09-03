@@ -1,6 +1,7 @@
 import { load } from '@fingerprintjs/fingerprintjs';
 import { isArray, isFunction } from 'lodash-es';
 
+import optionsInstance from '../options';
 import {
   BaseInfo,
   Callback,
@@ -32,13 +33,17 @@ export class Report {
 
   private uuid!: string;
 
-  constructor() {
-    load()
-      .then((fp) => fp.get())
-      .then((result) => (this.uuid = result.visitorId));
-  }
-
   setOptions(options: ReportClassOptions) {
+    const { uuid } = optionsInstance.get();
+
+    if (uuid) {
+      this.uuid = uuid;
+    } else {
+      load()
+        .then((fp) => fp.get())
+        .then((result) => (this.uuid = result.visitorId));
+    }
+
     this.options = options;
   }
 
@@ -82,8 +87,6 @@ export class Report {
 
   /**
    * 获取公共上报数据
-   *
-   * TODO: 网络信息等
    *
    * @return {*}  {CommonReportParams}
    * @memberof Report

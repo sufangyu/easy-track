@@ -1,5 +1,4 @@
 import { getLocationHref } from './common';
-import { logger } from './debug';
 import { __EASY_TRACK__ } from './global';
 
 /**
@@ -32,7 +31,7 @@ export const getPVTime = (
   const stayTime = time - entryTime;
   const pageUrl = url ?? getLocationHref();
   __EASY_TRACK__.pv!.entryTime = time;
-  logger.log('页面访问情况:', pageUrl, entryTime, leaveTime, stayTime);
+  // logger.log('页面访问情况:', pageUrl, entryTime, leaveTime, stayTime);
 
   return {
     entryTime,
