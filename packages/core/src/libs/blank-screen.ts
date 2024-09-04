@@ -34,7 +34,7 @@ export const listenBlankScreen = () => {
   });
 
   // fix: 使用 bind 到类, 避免 this 会丢失指向（指向 Window）
-  blankScreen.check.bind(BlankScreen)();
+  blankScreen.check.bind(blankScreen)();
 };
 
 class BlankScreen {
@@ -217,7 +217,7 @@ class BlankScreen {
       }
     }
 
-    // logger.log('空白无效点数量 =>>', emptyPoints, this.loopCount);
+    logger.log('空白无效点数量 =>>', emptyPoints, this.loopCount);
 
     // 根据空白点数判断是否白屏 ----------------------------------------------------------
     if (emptyPoints !== 17) {
