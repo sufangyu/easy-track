@@ -9,19 +9,19 @@ export const logger = {
     logger._flag = flag;
   },
   log: (...args: any[]) => {
-    if (logger._flag) {
+    if (!logger._flag) {
       return;
     }
     console.log(...logPrefix, ...args);
   },
   warn: (...args: any[]) => {
-    if (logger._flag) {
+    if (!logger._flag) {
       return;
     }
     console.warn(...logPrefix, ...args);
   },
   error: (...args: any[]) => {
-    if (logger._flag) {
+    if (!logger._flag) {
       return;
     }
     console.error(...logPrefix, ...args);

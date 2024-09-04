@@ -1,7 +1,8 @@
 import { eventEmitter, EventType, init, type InitOptions } from '@easy-track/core';
 
-import { ViewModel, Plugin } from './types';
 import { version } from '../package.json';
+
+import type { ViewModel, Plugin } from './types';
 
 /**
  *  监控插件
@@ -9,7 +10,7 @@ import { version } from '../package.json';
 const easyTrackPlugin: Plugin = {
   version,
   /**
-   * 安装插件
+   * 注册插件
    *
    * @param {*} app
    * @param {InitOptions} options
@@ -17,10 +18,9 @@ const easyTrackPlugin: Plugin = {
   install(app: any, options: InitOptions) {
     init(options);
 
-    // Vue3 全局错误处理
-    const handlerOrigin = app?.config?.errorHandler;
+    // Vue 全局错误处理
+    const handlerOrigin = app.config?.errorHandler;
 
-    // 重写 Vue3 全局错误处理
     app.config.errorHandler = function (err: Error, vm: ViewModel, info: string): void {
       eventEmitter.emit(EventType.ERROR, err);
       handlerOrigin && handlerOrigin.apply(null, [err, vm, info]);

@@ -32,7 +32,9 @@ export const listenBlankScreen = () => {
       });
     }
   });
-  blankScreen.check();
+
+  // fix: 使用 bind 到类, 避免 this 会丢失指向（指向 Window）
+  blankScreen.check.bind(BlankScreen)();
 };
 
 class BlankScreen {

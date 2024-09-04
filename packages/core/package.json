@@ -25,7 +25,7 @@
     "intersection-observer": "^0.12.2",
     "js-base64": "^3.7.7",
     "pako": "^2.1.0",
-    "rrweb": "2.0.0-alpha.4",
+    "rrweb": "2.0.0-alpha.17",
     "ua-parser-js": "^1.0.38",
     "web-vitals": "^4.2.3"
   },

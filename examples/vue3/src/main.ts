@@ -73,7 +73,7 @@ app
       // }
     },
 
-    log: true,
+    debug: true,
     skeleton: true,
 
     maxEvents: 20,
@@ -106,6 +106,7 @@ app
         if (curUrl.includes('/rrweb-player')) {
           return true;
         }
+        return false;
       }
     }
   })
