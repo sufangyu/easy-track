@@ -3,7 +3,6 @@ import { isArray, isFunction } from 'lodash-es';
 
 import optionsInstance from '../options';
 import {
-  BaseInfo,
   Callback,
   CommonReportParams,
   EventParams,
@@ -11,20 +10,7 @@ import {
   ReportParams,
   RequestMethod
 } from '../types';
-import {
-  __EASY_TRACK__,
-  isSupportFetch,
-  logger,
-  Queue,
-  getCurrentDomain,
-  getCurrentHref,
-  getUserAgent,
-  getCurrentReferrer,
-  getCurrentDpr,
-  getCurrentSize,
-  getCurrentNetworkInfo,
-  getCurrentLanguage
-} from '../utils';
+import { __EASY_TRACK__, isSupportFetch, logger, Queue } from '../utils';
 
 export class Report {
   private options!: ReportClassOptions;
@@ -58,34 +44,6 @@ export class Report {
   }
 
   /**
-   * 获取基础信息
-   *
-   * @private
-   * @return {*}  {BaseInfo}
-   * @memberof Report
-   */
-  private getBaseInfo(): BaseInfo {
-    const curSize = getCurrentSize();
-    const curConnection = getCurrentNetworkInfo();
-
-    const baseInfo: BaseInfo = {
-      domain: getCurrentDomain(),
-      href: getCurrentHref(),
-      referer: getCurrentReferrer(),
-      userAgent: getUserAgent(),
-      screenWidth: curSize.screenWidth,
-      screenHeight: curSize.screenHeight,
-      vireportWidth: curSize.viewportWidth,
-      vireportHeight: curSize.viewportHeight,
-      language: getCurrentLanguage(),
-      dpr: getCurrentDpr(),
-      networkType: curConnection?.effectiveType || '',
-      networkSpeed: curConnection?.downlink ?? 0
-    };
-    return baseInfo;
-  }
-
-  /**
    * 获取公共上报数据
    *
    * @return {*}  {CommonReportParams}
@@ -95,7 +53,6 @@ export class Report {
     return {
       userId: this.getUserId(),
       uuid: this.uuid,
-      baseInfo: this.getBaseInfo(),
       deviceInfo: __EASY_TRACK__.deviceInfo!
     };
   }

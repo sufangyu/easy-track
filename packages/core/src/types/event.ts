@@ -39,56 +39,65 @@ export enum StatusType {
   Error = 'error'
 }
 
-// 基础事件参数
+/**
+ * 事件基础参数
+ *
+ * @interface EventParamsBase
+ */
 interface EventParamsBase {
+  /** 事件发生时间 */
   time: number;
+  /** 事件状态 */
   status: StatusType;
+  /** 基础信息 */
+  baseInfo: BaseInfo;
+  /** 事件数据 */
   data: any;
 }
 
-// 白屏
+// 白屏事件
 interface EventParamsBlankScreen extends EventParamsBase {
   type: EventType.BLANK_SCREEN;
   category: 'blank-screen';
 }
 
-// 网络
+// 网络状态事件
 interface EventParamsNetwork extends EventParamsBase {
   type: EventType.NETWORK;
   category: NetworkStatus;
 }
 
-// 性能
+// 性能事件
 interface EventParamsPerformance extends EventParamsBase {
   type: EventType.PERFORMANCE;
   category: 'performance' | 'longtask' | 'resource' | 'memory';
 }
 
-// 埋点、曝光
+// 埋点事件、曝光事件
 interface EventParamsEventTrack extends EventParamsBase {
   type: EventType.EVENT_TRACK;
   category: 'click' | 'exposure';
 }
 
-// 录屏
+// 录屏事件
 interface EventParamsRecordScreen extends EventParamsBase {
   type: EventType.RECORD_SCREEN;
   category: 'record-screen';
 }
 
-// 错误
+// 错误事件
 interface EventParamsError extends EventParamsBase {
   type: EventType.ERROR | EventType.UNHANDLEDREJECTION | EventType.RESOURCE;
   category: 'error' | 'unhandledrejection' | 'resource';
 }
 
-// 网络请求
+// 网络请求事件
 interface EventParamsHttp extends EventParamsBase {
   type: EventType.REQUEST;
   category: 'xhr' | 'fetch';
 }
 
-// 页面访问
+// 页面访问事件
 interface EventParamsPage extends EventParamsBase {
   type: EventType.PV;
   category:
@@ -132,13 +141,13 @@ export interface CommonReportParams {
    * @memberof CommonReportParams
    */
   uuid: string;
-  /**
-   * 基础信息
-   *
-   * @type {BaseInfo}
-   * @memberof CommonReportParams
-   */
-  baseInfo: BaseInfo;
+  // /**
+  //  * 基础信息
+  //  *
+  //  * @type {BaseInfo}
+  //  * @memberof CommonReportParams
+  //  */
+  // baseInfo: BaseInfo;
   /**
    * 设备信息
    *

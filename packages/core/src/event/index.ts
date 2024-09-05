@@ -3,8 +3,28 @@ import { cloneDeep, isPlainObject } from 'lodash-es';
 import report from '../report';
 import { DB_EVENT_STORE_NAME } from '../setting';
 import { db, storage } from '../setup/cache/cache.utils';
-import { CacheType, Callback, EventOptions, EventParams, EventType, StatusType } from '../types';
-import { __EASY_TRACK__, _global, logger } from '../utils';
+import {
+  BaseInfo,
+  CacheType,
+  Callback,
+  EventOptions,
+  EventParams,
+  EventType,
+  StatusType
+} from '../types';
+import {
+  __EASY_TRACK__,
+  _global,
+  getCurrentDomain,
+  getCurrentDpr,
+  getCurrentHref,
+  getCurrentLanguage,
+  getCurrentNetworkInfo,
+  getCurrentReferrer,
+  getCurrentSize,
+  getUserAgent,
+  logger
+} from '../utils';
 
 /**
  * 事件追踪
@@ -48,20 +68,25 @@ export class EventTrack {
       return;
     }
 
-    this.setErrorForRecordScreen(params);
+    const curParams = {
+      ...params,
+      baseInfo: this.getBaseInfo()
+    };
+
+    this.setErrorForRecordScreen(curParams);
 
     let data: EventParams[] = [];
     switch (cacheType) {
       case 'normal':
-        this.data.push(params);
+        this.data.push(curParams);
         data = this.data;
         break;
       case 'storage':
-        storage.putItem(this.appCode, params);
+        storage.putItem(this.appCode, curParams);
         data = storage.getItem<EventParams[]>(this.appCode) || [];
         break;
       case 'db':
-        await db.add(DB_EVENT_STORE_NAME, params);
+        await db.add(DB_EVENT_STORE_NAME, curParams);
         data = (await db.getAll(DB_EVENT_STORE_NAME)) || [];
         break;
     }
@@ -76,15 +101,50 @@ export class EventTrack {
    *
    * - 实际上是调用 `report.send` 发送数据
    *
-   * @param {(EventParams | EventParams[])} data
+   * @param {(EventParams | EventParams[])} params
    * @param {Callback} [beforeSend]
    * @return {*}
    * @memberof Report
    */
-  async send(data: EventParams | EventParams[], beforeSend?: Callback): Promise<void> {
-    this.setErrorForRecordScreen(data);
+  async send(params: EventParams | EventParams[], beforeSend?: Callback): Promise<void> {
+    const curParams = (Array.isArray(params) ? params : [params]).map((it) => {
+      return {
+        ...it,
+        baseInfo: this.getBaseInfo()
+      };
+    });
 
-    report.send(data, beforeSend);
+    this.setErrorForRecordScreen(curParams);
+
+    report.send(curParams, beforeSend);
+  }
+
+  /**
+   * 获取基础信息对象
+   *
+   * @private
+   * @return {*}  {BaseInfo}
+   * @memberof EventTrack
+   */
+  private getBaseInfo(): BaseInfo {
+    const curSize = getCurrentSize();
+    const curConnection = getCurrentNetworkInfo();
+
+    const baseInfo: BaseInfo = {
+      domain: getCurrentDomain(),
+      href: getCurrentHref(),
+      referer: getCurrentReferrer(),
+      userAgent: getUserAgent(),
+      screenWidth: curSize.screenWidth,
+      screenHeight: curSize.screenHeight,
+      vireportWidth: curSize.viewportWidth,
+      vireportHeight: curSize.viewportHeight,
+      language: getCurrentLanguage(),
+      dpr: getCurrentDpr(),
+      networkType: curConnection?.effectiveType || '',
+      networkSpeed: curConnection?.downlink ?? 0
+    };
+    return baseInfo;
   }
 
   /**
