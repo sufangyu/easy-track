@@ -2,11 +2,23 @@
   "name": "@easy-track/vue2",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "main": "dist/index.umd.js",
+  "module": "dist/index.es.js",
+  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js",
+      "types": "./types/index.d.ts"
+    },
+    "./*": "./*"
   },
+  "scripts": {},
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@easy-track/core": "workspace:*",
+    "vue": "^2.7.16"
+  }
 }

@@ -7,11 +7,11 @@
 
   <nav class="mt-4 flex flex-wrap justify-center items-center gap-4">
     <RouterLink to="/about">Go to About</RouterLink>
-    <RouterLink to="/news">Go to News</RouterLink>
     <button @click="() => router.push({ path: '/about' })">Go to About</button>
     <button @click="() => router.replace({ path: '/about' })">
       Go to About - replace
     </button>
+    <RouterLink to="/news">PV（新闻列表）</RouterLink>
     <RouterLink to="/error">错误页面</RouterLink>
     <RouterLink to="/event-track">事件埋点 & 白屏检测</RouterLink>
     <RouterLink to="/request">网络请求</RouterLink>
