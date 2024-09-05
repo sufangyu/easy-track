@@ -34,7 +34,7 @@ export const listenBlankScreen = () => {
   });
 
   // fix: 使用 bind 到类, 避免 this 会丢失指向（指向 Window）
-  blankScreen.check.bind(blankScreen)();
+  blankScreen.check();
 };
 
 class BlankScreen {
@@ -141,7 +141,7 @@ class BlankScreen {
     } else {
       document.readyState === 'complete'
         ? this.idleCallback()
-        : _global.addEventListener('load', this.idleCallback);
+        : _global.addEventListener('load', () => this.idleCallback());
 
       // _global.addEventListener("error", this.idleCallback);
       // _global.addEventListener("unhandledrejection", this.idleCallback);
@@ -179,37 +179,55 @@ class BlankScreen {
 
     // 记录空白点数
     let emptyPoints = 0;
+    // 横向和纵向的检查点各15个（值要设置为奇数）
+    const checkPoints = 15;
+    // 中心点检查点
+    const centerPoints = checkPoints / 2 + 1;
+    // 所有检查点
+    const allCheckPoints = checkPoints * 2 - 1;
+    // 屏幕尺寸
+    const { innerWidth, innerHeight } = _global;
 
     // 检查屏幕的点 --------------------------------------------------------------------
-    // 分别为横向和纵向的点各9个
-    for (let i = 1; i <= 9; i++) {
-      const xElements = document.elementsFromPoint(
-        (_global.innerWidth * i) / 10,
-        _global.innerHeight / 2
-      );
-      const yElements = document.elementsFromPoint(
-        _global.innerWidth / 2,
-        (_global.innerHeight * i) / 10
-      );
+    for (let i = 1; i <= checkPoints; i++) {
+      const xPosition = {
+        x: (innerWidth * i) / (checkPoints + 1),
+        y: innerHeight / 2
+      };
+      const yPosition = {
+        x: innerWidth / 2,
+        y: (innerHeight * i) / (checkPoints + 1)
+      };
+      const upDiagonalPosition = {
+        x: (innerWidth * i) / (checkPoints + 1),
+        y: (innerHeight * i) / (checkPoints + 1)
+      };
+      const downDiagonalPosition = {
+        x: (innerWidth * i) / (checkPoints + 1),
+        y: innerHeight - (innerHeight * i) / (checkPoints + 1)
+      };
+
+      const xElements = document.elementsFromPoint(xPosition.x, xPosition.y);
+      const yElements = document.elementsFromPoint(yPosition.x, yPosition.y);
       const upDiagonalElements = document?.elementsFromPoint(
-        (_global.innerWidth * i) / 10,
-        (_global.innerHeight * i) / 10
+        upDiagonalPosition.x,
+        upDiagonalPosition.y
       );
       const downDiagonalElements = document?.elementsFromPoint(
-        (_global.innerWidth * i) / 10,
-        _global.innerHeight - (_global.innerHeight * i) / 10
+        downDiagonalPosition.x,
+        downDiagonalPosition.y
       );
 
-      // 取第一个元素来判断
+      // 取第一个元素来判断否是容器元素
       if (this.isContainer(xElements[0] as HTMLElement)) {
         emptyPoints++;
       }
 
       // 中心点只计算一次
-      if (i !== 5) {
+      if (i !== centerPoints) {
         if (
-          this.isContainer(yElements[0] as HTMLElement) ||
-          this.isContainer(upDiagonalElements[0] as HTMLElement) ||
+          this.isContainer(yElements[0] as HTMLElement) &&
+          this.isContainer(upDiagonalElements[0] as HTMLElement) &&
           this.isContainer(downDiagonalElements[0] as HTMLElement)
         ) {
           emptyPoints++;
@@ -217,10 +235,10 @@ class BlankScreen {
       }
     }
 
-    logger.log('空白无效点数量 =>>', emptyPoints, this.loopCount);
+    // logger.log('空白无效点数量:', emptyPoints, allCheckPoints, '循环次数:', this.loopCount);
 
     // 根据空白点数判断是否白屏 ----------------------------------------------------------
-    if (emptyPoints !== 17) {
+    if (emptyPoints !== allCheckPoints) {
       // 骨架屏项目
       if (this.skeleton) {
         // 第一次不比较，因为骨架屏会先加载
@@ -244,9 +262,9 @@ class BlankScreen {
       this.startLoopCheck();
     }
 
-    // 非骨架屏: 17个点都是容器节点算作白屏
+    // 非骨架屏: `allCheckPoints` 个点都是容器节点算作白屏
     // 轮询达到最大次数 或 已成功加载, 上报结果
-    const result = emptyPoints === 17 ? StatusType.Error : StatusType.Ok;
+    const result = emptyPoints === allCheckPoints ? StatusType.Error : StatusType.Ok;
     if (result === StatusType.Ok || this.loopCount >= this.maxLoops) {
       isFunction(this.callback) && this.callback(result);
       this.stopLoopCheck();
@@ -284,14 +302,13 @@ class BlankScreen {
    * @memberof BlankScreen
    */
   private stopLoopCheck(): void {
-    // logger.log("即将停止轮询检测", !!this.loopTimer);
     if (this.loopTimer) {
       clearInterval(this.loopTimer);
       this.loopTimer = null;
       this.loopCount = 0;
       this.isStopedLoop = true;
 
-      logger.log('已停止轮询检测', this.loopTimer, this.loopCount, this.isStopedLoop);
+      logger.log('停止轮询检测', '是否已停止轮询:', this.isStopedLoop);
     }
   }
 
@@ -311,7 +328,7 @@ class BlankScreen {
         : this.skeletonInitList.push(selector);
     }
 
-    return this.containerElements?.indexOf(selector) != -1;
+    return this.containerElements?.indexOf(selector) !== -1;
   }
 
   /**
@@ -323,16 +340,19 @@ class BlankScreen {
    * @memberof BlankScreen
    */
   private getSelector(element: Element): string {
-    if (element.id && isString(element.id)) {
+    if (!element) {
+      return '';
+    }
+    if (element?.id && isString(element.id)) {
       return `#${element.id}`;
     }
-    if (element.className && isString(element.className)) {
+    if (element?.className && isString(element.className)) {
       return `.${element.className
         .split(' ')
         .filter((item: any) => !!item)
         .join('.')}`;
     }
-    return element.nodeName.toLowerCase();
+    return element?.nodeName?.toLowerCase();
   }
 }
 

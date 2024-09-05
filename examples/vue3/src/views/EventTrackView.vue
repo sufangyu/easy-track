@@ -1,12 +1,5 @@
 <template>
-  <div
-    v-if="!show"
-    class="fixed flex justify-center items-center top-0 right-0 left-0 bottom-0"
-  >
-    <p>骨架屏加载中...</p>
-  </div>
-
-  <section v-if="show">
+  <section>
     <h1>事件埋点</h1>
     <nav class="mt-4">
       <button @click="() => router.back()">Go Back</button>
@@ -30,21 +23,13 @@
     </div>
   </section>
 
-  <div
-    class="fixed bottom-4 right-4 text-xs cursor-pointer bg-slate-700 rounded-full w-10 h-10 flex justify-center items-center"
-    @click="() => (show = true)"
-  >
-    显示
-  </div>
+  
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-
-const show = ref(false);
 
 const reportParams = { message: "自定义的数据" };
 
