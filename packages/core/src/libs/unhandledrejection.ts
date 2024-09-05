@@ -25,6 +25,11 @@ export const listenUnhandledrejection = () => {
  */
 export const unhandledrejectionCallback = () => (ev: PromiseRejectionEvent) => {
   const { reason } = ev;
+  // 过滤字符串类型的报错
+  if (typeof reason === 'string') {
+    return;
+  }
+
   const [stackFrame] = parse(reason);
   const { fileName = '', functionName = '', columnNumber: column, lineNumber: line } = stackFrame;
 
