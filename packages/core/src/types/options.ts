@@ -121,9 +121,23 @@ export interface Switch {
   resource: boolean;
   /** 录屏 */
   recordScreen: boolean;
-  /** 网络 */
+  /**
+   * 网络状态
+   * 
+   * - 监听网络离线、在线、类型变化上报
+   *
+   * @type {boolean}
+   * @memberof Switch
+   */
   network: boolean;
-  /** 日志 */
+  /**
+   * 日志
+   * 
+   * - 会拦截 console.warn、console.error 进行上报
+   *
+   * @type {boolean}
+   * @memberof Switch
+   */
   logger: boolean;
 }
 

@@ -7,7 +7,8 @@ import {
   httpCallback,
   pvCallback,
   webResourceCallback,
-  networkCallback
+  networkCallback,
+  loggerCallback
 } from '../libs';
 import { errorCallback } from '../libs/error';
 import options from '../options';
@@ -15,6 +16,7 @@ import { EventType } from '../types';
 
 export const initReplace = () => {
   const siwtchMap = options.getSwitchMap();
+  console.log('siwtchMap', siwtchMap);
 
   // 事件埋点
   if (siwtchMap[EventType.EVENT_TRACK]) {
@@ -37,6 +39,11 @@ export const initReplace = () => {
   // 网络情况
   if (siwtchMap[EventType.NETWORK]) {
     addListenOrReplace({ type: EventType.NETWORK, callback: networkCallback() });
+  }
+
+  // 日志
+  if (siwtchMap[EventType.LOGGER]) {
+    addListenOrReplace({ type: EventType.LOGGER, callback: loggerCallback() });
   }
 
   // 全局错误

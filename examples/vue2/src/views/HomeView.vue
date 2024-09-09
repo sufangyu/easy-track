@@ -24,6 +24,9 @@
         <el-button type="text">
           <router-link to="/report">手动上报</router-link>
         </el-button>
+        <el-button type="text">
+          <router-link to="/console">Console 日志上报</router-link>
+        </el-button>
       </div>
     </div>
 

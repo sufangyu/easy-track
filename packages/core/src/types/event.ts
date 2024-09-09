@@ -13,6 +13,7 @@ export enum EventType {
   PERFORMANCE = 'performance',
   RESOURCE = 'resource',
   NETWORK = 'network',
+  LOGGER = 'logger',
   XHR = 'xhr',
   FETCH = 'fetch',
   REQUEST = 'request',
@@ -67,6 +68,12 @@ interface EventParamsNetwork extends EventParamsBase {
   category: NetworkStatus;
 }
 
+// 控制台日志事件
+interface EventParamsLogger extends EventParamsBase {
+  type: EventType.LOGGER;
+  category: keyof Console,
+}
+
 // 性能事件
 interface EventParamsPerformance extends EventParamsBase {
   type: EventType.PERFORMANCE;
@@ -116,6 +123,7 @@ interface EventParamsPage extends EventParamsBase {
 export type EventParams =
   | EventParamsBlankScreen
   | EventParamsNetwork
+  | EventParamsLogger
   | EventParamsPerformance
   | EventParamsError
   | EventParamsHttp

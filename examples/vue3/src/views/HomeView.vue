@@ -17,6 +17,7 @@
     <RouterLink to="/request">网络请求</RouterLink>
     <RouterLink to="/exposure-one">元素曝光</RouterLink>
     <RouterLink to="/hand-report">手动上报</RouterLink>
+    <RouterLink to="/console">Console 日志上报</RouterLink>
   </nav>
 </template>
 

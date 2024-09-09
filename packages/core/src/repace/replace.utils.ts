@@ -14,7 +14,8 @@ import {
   listenWebResource,
   listenExposureTrack,
   listenRecordScreen,
-  listenNetwork
+  listenNetwork,
+  replaceConsole
 } from '../libs';
 import { EventType, type ReplaceParams } from '../types';
 import { _global, eventEmitter } from '../utils';
@@ -25,6 +26,7 @@ const listenOrReplace = (type: EventType) => {
     [EventType.PERFORMANCE]: listenWebPerformance,
     [EventType.RESOURCE]: listenWebResource,
     [EventType.NETWORK]: listenNetwork,
+    [EventType.LOGGER]: replaceConsole,
 
     [EventType.XHR]: replaceXHR,
     [EventType.FETCH]: replaceFetch,

@@ -68,9 +68,11 @@
     </section>
 
     <section style="margin-bottom: 16px;">
-      <h4 style="margin-bottom: 8px;">log上报</h4>
+      <h4 style="margin-bottom: 8px;">日志上报</h4>
       <div>
-        <button id="nativelogUpload" onclick="onClickLog()">原生log上报</button>
+        <button id="nativelogUpload" onclick="onClickLog()">原生log</button>
+        <button id="nativelogUpload" onclick="onClickLogWarn()">warn 上报</button>
+        <button id="nativelogUpload" onclick="onClickLogError()">error 上报</button>
       </div>
     </section>
 
@@ -167,6 +169,7 @@
       };
       
 
+      // log上报 --------------------------------------------------------------
       function onClickLog() {
         console.log(111, 222)
         console.log('原生 log 字符串1', '原生 log 字符串2')
@@ -174,6 +177,21 @@
         console.log(['原生 log 数组'])
         console.log({ name: '张三疯' }, { age: 18 })
       }
+
+      function onClickLogWarn() {
+        console.warn('字符串')
+        console.warn('布尔', true)
+        console.warn('对象', { name: '张三疯',  age: 18 })
+        console.warn('数组', [111, 222])
+      }
+
+      function onClickLogError() {
+        console.error('字符串')
+        console.error('布尔', true)
+        console.error('对象', { name: '张三疯',  age: 18 })
+        console.error('数组', [111, 222])
+      }
+      
 
       function onClickTrack() {
         // window._MITO_.log({ message: { one: 111 }, tag: '测试' })

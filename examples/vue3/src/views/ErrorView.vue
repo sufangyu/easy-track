@@ -12,11 +12,11 @@
   </div>
 
   <div class="mt-4 flex flex-wrap justify-center items-center gap-4">
-    <button @click="handleSyntaxErrors">语法错误</button>
-    <button @click="handlePromiseError">异步错误</button>
-    <button @click="handleImageErrors">图片资源加载错误</button>
-    <button @click="handleScriptErrors">Script资源加载错误</button>
-    <button @click="handleStyleErrors">Style资源加载错误</button>
+    <button @click="handleSyntaxErrors()">语法错误</button>
+    <button @click="handlePromiseError()">异步错误</button>
+    <button @click="handleImageErrors()">图片资源加载错误</button>
+    <button @click="handleScriptErrors()">Script资源加载错误</button>
+    <button @click="handleStyleErrors()">Style资源加载错误</button>
   </div>
 </template>
 

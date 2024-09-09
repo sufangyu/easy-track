@@ -3884,6 +3884,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     EventType2["PERFORMANCE"] = "performance";
     EventType2["RESOURCE"] = "resource";
     EventType2["NETWORK"] = "network";
+    EventType2["LOGGER"] = "logger";
     EventType2["XHR"] = "xhr";
     EventType2["FETCH"] = "fetch";
     EventType2["REQUEST"] = "request";
@@ -5959,7 +5960,8 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       performance: true,
       resource: true,
       recordScreen: true,
-      network: true
+      network: true,
+      logger: true
     },
     containerElements: ["html", "body", "#app", "#root"],
     skeleton: false,
@@ -6028,7 +6030,8 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
         performance: performance2,
         resource,
         recordScreen,
-        network
+        network,
+        logger: log
       } = this.getSwitchs();
       if (hashchange && history) {
         logger.warn("hashchange 和 history 不能同时开启, 需按项目路由模式开启");
@@ -6046,6 +6049,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       this.switchMap[EventType$1.PERFORMANCE] = performance2;
       this.switchMap[EventType$1.RESOURCE] = resource;
       this.switchMap[EventType$1.NETWORK] = network;
+      this.switchMap[EventType$1.LOGGER] = log;
     }
   }
   const validateOptionMustFill = (val, name) => {
@@ -25228,6 +25232,39 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       });
     };
   };
+  const wrapConsoleMethod = (level, callback) => {
+    if (!("console" in _global) || !(level in _global.console)) {
+      return;
+    }
+    const originalMethod = console[level];
+    console[level] = function(...args) {
+      isFunction(callback) && callback(level, args);
+      originalMethod(...args);
+    };
+  };
+  const replaceConsole = () => {
+    const consoleLevels = ["warn", "error"];
+    consoleLevels.forEach((level) => {
+      wrapConsoleMethod(level, (level2, message) => {
+        eventEmitter.emit(EventType$1.LOGGER, { level: level2, message });
+      });
+    });
+  };
+  const loggerCallback = () => {
+    return (data) => {
+      const { level, message } = data;
+      eventTrack.add({
+        type: EventType$1.LOGGER,
+        category: level,
+        time: getTimestamp(),
+        status: StatusType.Error,
+        data: {
+          level,
+          message
+        }
+      });
+    };
+  };
   const listenOrReplace = (type) => {
     var _a3;
     const listenOrReplaceFuncMap = {
@@ -25235,6 +25272,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       [EventType$1.PERFORMANCE]: listenWebPerformance,
       [EventType$1.RESOURCE]: listenWebResource,
       [EventType$1.NETWORK]: listenNetwork,
+      [EventType$1.LOGGER]: replaceConsole,
       [EventType$1.XHR]: replaceXHR,
       [EventType$1.FETCH]: replaceFetch,
       // 不用具体实现, 具体在 xhr、fetch
@@ -25260,6 +25298,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   };
   const initReplace = () => {
     const siwtchMap = options.getSwitchMap();
+    console.log("siwtchMap", siwtchMap);
     if (siwtchMap[EventType$1.EVENT_TRACK]) {
       addListenOrReplace({
         type: EventType$1.EVENT_TRACK,
@@ -25274,6 +25313,9 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     }
     if (siwtchMap[EventType$1.NETWORK]) {
       addListenOrReplace({ type: EventType$1.NETWORK, callback: networkCallback() });
+    }
+    if (siwtchMap[EventType$1.LOGGER]) {
+      addListenOrReplace({ type: EventType$1.LOGGER, callback: loggerCallback() });
     }
     if (siwtchMap[EventType$1.ERROR]) {
       addListenOrReplace({

@@ -11,6 +11,7 @@ import RequestView from '../views/RequestView.vue';
 import ExposureOne from '../views/exposure/ExposureOne.vue';
 import ExposureTwo from '../views/exposure/ExposureTwo.vue';
 import HandReport from '../views/HandReport.vue';
+import ConsoleView from '../views/ConsoleView.vue';
 
 const routes = [
   { path: '/', component: HomeView },
@@ -23,7 +24,8 @@ const routes = [
   { path: '/request', component: RequestView },
   { path: '/exposure-one', component: ExposureOne },
   { path: '/exposure-two', component: ExposureTwo },
-  { path: '/hand-report', component: HandReport }
+  { path: '/hand-report', component: HandReport },
+  { path: '/console', component: ConsoleView }
 ];
 
 const router = createRouter({

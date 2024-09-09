@@ -62,6 +62,12 @@ const routes: Array<RouteConfig> = [
     name: 'NewsDetail',
     component: () => import('../views/NewsDetailView.vue'),
     meta: { title: '新闻详情' }
+  },
+  {
+    path: '/console',
+    name: 'Console',
+    component: () => import('../views/ConsoleView.vue'),
+    meta: { title: 'Console 日志上报' }
   }
 ];
 
