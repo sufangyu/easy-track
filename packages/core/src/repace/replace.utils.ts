@@ -10,7 +10,7 @@ import {
   replaceHistoryPushState,
   replaceHistoryReplaceState,
   replaceXHR,
-  listenPageVisiable,
+  listenPageVisibility,
   listenWebResource,
   listenExposureTrack,
   listenRecordScreen,
@@ -38,7 +38,7 @@ const listenOrReplace = (type: EventType) => {
     [EventType.EXPOSURE_TRACK]: listenExposureTrack,
     [EventType.RECORD_SCREEN]: listenRecordScreen,
 
-    [EventType.PV]: listenPageVisiable,
+    [EventType.PV]: listenPageVisibility,
     [EventType.HASH_CHANGE]: listenHashChange,
     [EventType.HISTORY]: replaceHistory,
     [EventType.HISTORY_PUSHSTATE]: replaceHistoryPushState,

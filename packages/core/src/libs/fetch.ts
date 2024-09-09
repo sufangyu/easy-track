@@ -115,10 +115,10 @@ export const checkIsIgnoreUrl = (url: string, method: string): boolean => {
 /**
  * 网络请求回调函数
  *
- * @param {(EventType.FETCH | EventType.XHR)} type
+ * @param {(EventType.FETCH | EventType.XHR)} category
  * @return {*}
  */
-export const httpCallback = (type: EventType.FETCH | EventType.XHR) => (data: HttpData) => {
+export const httpCallback = (category: EventType.FETCH | EventType.XHR) => (data: HttpData) => {
   const result = httpTransform(data);
   const { dsn } = options.get();
 
@@ -126,7 +126,7 @@ export const httpCallback = (type: EventType.FETCH | EventType.XHR) => (data: Ht
     // 立即上报接口错误
     eventTrack.send({
       type: EventType.REQUEST,
-      category: type,
+      category,
       status: StatusType.Error,
       time: data.time,
       data: result
@@ -137,7 +137,7 @@ export const httpCallback = (type: EventType.FETCH | EventType.XHR) => (data: Ht
   if (!data.url.includes(dsn)) {
     eventTrack.add({
       type: EventType.REQUEST,
-      category: type,
+      category,
       status: StatusType.Ok,
       time: data.time,
       data: result

@@ -4,7 +4,7 @@ import { NATIVE_EVENTS } from '../setting';
 
 interface Params {
   el: HTMLElement | Document | Window | XMLHttpRequest;
-  eventName: keyof WindowEventMap | 'loadend';
+  eventName: keyof WindowEventMap | 'loadend' | 'visibilitychange';
   event: EventListenerOrEventListenerObject; // Event;
   capture?: boolean;
 }

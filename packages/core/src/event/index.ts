@@ -17,7 +17,7 @@ import {
   _global,
   getCurrentDomain,
   getCurrentDpr,
-  getCurrentHref,
+  getLocationHref,
   getCurrentLanguage,
   getCurrentNetworkInfo,
   getCurrentReferrer,
@@ -132,7 +132,7 @@ export class EventTrack {
 
     const baseInfo: BaseInfo = {
       domain: getCurrentDomain(),
-      href: getCurrentHref(),
+      href: getLocationHref(),
       referer: getCurrentReferrer(),
       userAgent: getUserAgent(),
       screenWidth: curSize.screenWidth,

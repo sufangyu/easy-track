@@ -9,7 +9,7 @@
 
     <div class="mt-4 flex flex-wrap gap-2">
       <button class="cla">类名埋点</button>
-      <button data-desc="元素文本埋点）">report2</button>
+      <button data-desc="元素文本埋点">report2</button>
       <button data-desc="类名 / 文本" class="cla">report3</button>
       <button>不触发埋点</button>
       <button
@@ -22,8 +22,6 @@
       </button>
     </div>
   </section>
-
-  
 </template>
 
 <script setup lang="ts">

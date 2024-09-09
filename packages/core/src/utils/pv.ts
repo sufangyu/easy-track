@@ -1,4 +1,4 @@
-import { getLocationHref } from './common';
+import { getCurrentReferrer, getLocationHref } from './common';
 import { __EASY_TRACK__ } from './global';
 
 /**
@@ -25,18 +25,21 @@ export const getPVTime = (
   stayTime: number;
   // 页面地址
   pageUrl: string;
+  // 跳转来源
+  referer: string;
 } => {
   const { entryTime } = __EASY_TRACK__.pv!;
   const leaveTime = time;
   const stayTime = time - entryTime;
   const pageUrl = url ?? getLocationHref();
+  const referer = getCurrentReferrer();
   __EASY_TRACK__.pv!.entryTime = time;
-  // logger.log('页面访问情况:', pageUrl, entryTime, leaveTime, stayTime);
 
   return {
     entryTime,
     leaveTime,
     stayTime,
-    pageUrl
+    pageUrl,
+    referer
   };
 };

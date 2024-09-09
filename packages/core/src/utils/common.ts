@@ -1,14 +1,11 @@
 /** 获取当前时间戳 */
 export const getTimestamp = () => Date.now();
 
-/** 获取当前href */
+/** 获取当前页面 href */
 export const getLocationHref = () => window.location.href;
 
 /** 获取当前域名 */
 export const getCurrentDomain = () => window.location.host;
-
-/** 获取当前页面路径 */
-export const getCurrentHref = () => window.location.href;
 
 /** 获取当前来源地址 */
 export const getCurrentReferrer = () => document.referrer;

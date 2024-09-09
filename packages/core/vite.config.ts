@@ -33,6 +33,7 @@ export default defineConfig(({ mode }) => ({
     lib: {
       entry: 'src/index.ts',
       name: convertPackageName(pkg.name),
+      // formats: ['es', 'cjs', 'iife'],
       fileName: (format) => `index.${format}.js`
     },
     rollupOptions: {

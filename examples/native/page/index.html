@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>native-js-demo</title>
+    <script src="../static/js/index.umd.js"></script>
+    <script src="../static/js/init.js"></script>
+
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.js"></script>
+
+    <link href="https://www.test.com/home.efed1520.css" rel="preload" as="style" />
+    <link href="./home.efed1520.css" />
+    <script src="./app.efed1520.js"></script>
+    <style>
+      div { margin: 10px 0; }
+      input, area { vertical-align: top; }
+    </style>
+  </head>
+
+  <body>
+    
+    <section style="margin-bottom: 16px;">
+      <h4 style="margin-bottom: 8px;">错误监控</h4>
+      <div>
+        <button onclick="codeError()">语法错误</button>
+        <button onclick="promiseError()">promise错误</button>
+        <button onclick="handleImageErrors()">图片资源加载错误</button>
+        <button onclick="handleScriptErrors()">Script资源加载错误</button>
+        <button onclick="handleStyleErrors()">Style资源加载错误</button>
+      </div>
+    </section>
+
+    <section style="margin-bottom: 16px;">
+      <h4 style="margin-bottom: 8px;">手动上报</h4>
+      <div>
+        <button onclick="handleAddTrack()"> 添加到队列</button>
+        <button onclick="handleReportTrack()"> 立即上报</button>
+      </div>
+    </section>
+
+    <section>
+      <h4 style="margin-bottom: 8px;">埋点统计</h4>
+      <div>
+        <button class="cla">类名埋点</button>
+        <button data-desc="元素文本埋点">report2</button>
+        <button data-desc="类名 / 文本" class="cla">report3</button>
+        <button>不触发埋点</button>
+        <button class="r" @click.stop="handleAlert" :data-event-params="JSON.stringify({ message: "自定义的数据" })" data-event-name="自定义事件名称">
+          埋点（支持定义上报名称、数据）
+        </button>
+        <!-- <button id="trackUpload" data-track="custom_event" onclick="onClickTrack()">自定义埋点上报</button>
+        <button data-track="custom_event" data-track-params='{"name": "张三疯", "age": 18}'>自定义埋点(非事件)</button> -->
+
+        <div>
+          <input placeholder="单行输入框" class="input_normal" />
+          <textarea placeholder="多行输入框" class="input_textarea"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h4 style="margin-bottom: 8px;">元素曝光统计</h4>
+      <div>
+        <a href="./exposure.html">跳到原生-元素曝光页面</a>
+      </div>
+    </section>
+
+    <section style="margin-bottom: 16px;">
+      <h4 style="margin-bottom: 8px;">log上报</h4>
+      <div>
+        <button id="nativelogUpload" onclick="onClickLog()">原生log上报</button>
+      </div>
+    </section>
+
+    <section style="margin-bottom: 16px;">
+      <h4 style="margin-bottom: 8px;">网络请求</h4>
+      <div>
+        <button id="normalReq" onclick="onClickXhrNormal()">xhr正常请求</button>
+        <button id="normalReq" onclick="onClickXhrAuth()">xhr正常请求-业务错误</button>
+        <button id="exceptionReq" onclick="onClickXhrError()">xhr异常请求</button>
+        <button id="normalFetch" onclick="onClickNativeFetch()">Fetch正常请求</button>
+        <button id="exceptionFetch" onclick="onClickNativeErrorFetch()">Fetch异常请求</button>
+      </div>
+    </section>
+
+    <section style="margin-bottom: 16px;">
+      <h4 style="margin-bottom: 8px;">页面访问</h4>
+      <div>
+        <a href='#a'>hash</a>
+        <button onclick="onClickPushState('./about.html')">跳About页面</button>
+      </div>
+      <div>
+        <a href="./about.html">跳到原生-About页面</a>
+      </div>
+    </section>
+
+    <script>
+      // 错误 --------------------------------------------------------------
+      function codeError() {
+        let a = {}
+        a.split('/')
+      }
+
+      function promiseError() {
+        new Promise(function (resolve, reject) {
+          window.someVar.error = "error";
+        }).then((res) => {
+          console.log(res);
+        });
+      }
+
+      function handleImageErrors() {
+        // 资源加载错误
+        const img = document.createElement("img");
+        img.src = "https://www.xxxx.com/img/bd_logo1.png";
+        document.body.appendChild(img);
+      }
+
+      function handleScriptErrors() {
+        // Script 资源加载错误
+        const script = document.createElement("script");
+        script.src = "https://www.xxxx.com/js/main.js";
+        document.body.appendChild(script);
+      }
+
+      function handleStyleErrors() {
+        const link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = "https://www.xxxx.com/css/main.css";
+        document.body.appendChild(link);
+      }
+
+      // 手动上报 --------------------------------------------------------------
+      function handleAddTrack() {
+        console.log("添加到队列 =>>");
+        EasyTrackCore.eventTrack.add({
+          type: 'request',
+          category: "fetch",
+          time: Date.now(),
+          status: 'ok',
+          data: {
+            url: "https://www.easy-mock.com/mock/61c827a953d04e75f1b33164/example",
+            method: "GET",
+          },
+        });
+      };
+
+      function handleReportTrack() {
+        console.log("立即上报 =>>");
+        EasyTrackCore.eventTrack.send({
+          type: 'request',
+          category: "fetch",
+          time: Date.now(),
+          status: 'ok',
+          data: {
+            url: "https://www.easy-mock.com/mock/61c827a953d04e75f1b33164/example",
+            method: "GET",
+          },
+        });
+      };
+
+      // 埋点统计
+      function handleAlert() {
+        alert("触发埋点");
+      };
+      
+
+      function onClickLog() {
+        console.log(111, 222)
+        console.log('原生 log 字符串1', '原生 log 字符串2')
+        console.log(true, false)
+        console.log(['原生 log 数组'])
+        console.log({ name: '张三疯' }, { age: 18 })
+      }
+
+      function onClickTrack() {
+        // window._MITO_.log({ message: { one: 111 }, tag: '测试' })
+        // window.MONITOR.track('custom_event');
+      }
+
+      function onClickNativeFetch() {
+        fetch('/normal/post', {
+          method: 'POST',
+          body: JSON.stringify({ test: '测试请求体' }),
+          mode: 'cors',
+          headers: {
+            // 'Content-Type': 'application/json'
+            'Content-Type': 'multipart/form-data'
+          }
+        }).then((res) => {
+          res.text().then((res) => console.log('res', res))
+        })
+      }
+
+      function onClickNativeErrorFetch() {
+        // fetch('https://test.baidu.com/exception/post', {
+        fetch('./exception/post', {
+          method: 'post',
+          body: JSON.stringify({ test: '测试请求体' }),
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+          .then(
+            (res) => {
+              // res.text().then((res) => console.log('res', res))
+            },
+            (err) => {
+              console.log('err', err)
+            }
+          )
+          .catch((err) => {
+            console.log(err)
+          })
+      }
+
+      function onClickXhrNormal() {
+        const xhr = new XMLHttpRequest()
+        // xhr.open('get', 'https://www.baidu.com/normal')
+        xhr.open('get', '/normal')
+        // xhr.setRequestHeader('content-type', 'application/json')
+        xhr.setRequestHeader('content-type', 'multipart/form-data')
+        xhr.send('{name: "张三疯"}')
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            console.log(xhr.responseText)
+          }
+        }
+      }
+
+      function onClickXhrAuth() {
+        const xhr = new XMLHttpRequest()
+        xhr.open('get', '/auth')
+        xhr.setRequestHeader('content-type', 'multipart/form-data')
+        xhr.send('{name: "张三疯"}')
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            console.log(xhr.responseText)
+          }
+        }
+      }
+
+      function onClickXhrError() {
+        const xhr = new XMLHttpRequest()
+        xhr.open('get', '/exception')
+        xhr.setRequestHeader('content-type', 'application/json')
+        xhr.send()
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            console.log(xhr.responseText)
+          }
+        }
+      }
+
+      function onClickPushState(path) {
+        history.pushState(null, null, path);
+      }
+    </script>
+  </body>
+</html>

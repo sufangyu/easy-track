@@ -50,7 +50,7 @@ interface EventParamsBase {
   /** 事件状态 */
   status: StatusType;
   /** 基础信息 */
-  baseInfo: BaseInfo;
+  baseInfo?: BaseInfo;
   /** 事件数据 */
   data: any;
 }
@@ -106,7 +106,8 @@ interface EventParamsPage extends EventParamsBase {
     | 'history-pushstate'
     | 'history-replaceState'
     | 'pagehide'
-    | 'pageshow';
+    | 'pageshow'
+    | 'beforeunload';
 }
 
 /**

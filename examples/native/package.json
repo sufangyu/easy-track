@@ -1,0 +1,16 @@
+{
+  "name": "native",
+  "version": "1.0.0",
+  "description": "native website",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "serve": "cross-env NODE_ENV=demo ts-node ./server/index.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "open": "^10.1.0"
+  }
+}
