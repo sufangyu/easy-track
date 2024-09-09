@@ -25,18 +25,36 @@ export const listenNetwork = () => {
       eventEmitter.emit(EventType.NETWORK, NetworkStatus.OFFLINE);
     }
   });
+
+  if ('connection' in navigator) {
+    const connection =
+      navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+
+    connection?.addEventListener('change', () => {
+      // 当前或之前是断网状态, 不触发 change 回调
+      if (!navigator.onLine || __EASY_TRACK__.networkStatus === NetworkStatus.OFFLINE) {
+        return;
+      }
+
+      eventEmitter.emit(EventType.NETWORK, NetworkStatus.CHANGE);
+    });
+  }
 };
 
 export const networkCallback = () => {
   return (networkState: NetworkStatus) => {
-    // 网络状态与最后的标识对比, 未发生变化不发送网络事件
+    // 网络状态 或 网络类型与最后的标识对比, 未发生变化不发送网络事件
     if (__EASY_TRACK__.networkStatus === networkState) {
       return;
     }
 
-    __EASY_TRACK__.networkStatus = networkState;
+    if (networkState !== NetworkStatus.CHANGE) {
+      __EASY_TRACK__.networkStatus = networkState;
+    }
+
     const curNetworkInfo = getCurrentNetworkInfo();
-    eventTrack.send({
+    const eventType = networkState === NetworkStatus.CHANGE ? 'add' : 'send';
+    eventTrack[eventType]({
       type: EventType.NETWORK,
       category: networkState,
       time: getTimestamp(),

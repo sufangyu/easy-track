@@ -58,6 +58,13 @@ export interface EasyTrack {
    * @memberof EasyTrack
    */
   networkStatus: NetworkStatus;
+  /**
+   * 网络类型
+   *
+   * @type {('slow-2g' | '2g' | '3g' | '4g' | '5g' | 'wifi' | 'unknown' | '')}
+   * @memberof EasyTrack
+   */
+  networkType: 'slow-2g' | '2g' | '3g' | '4g' | '5g' | 'wifi' | 'unknown' | '';
 }
 
 export interface Global extends Window {

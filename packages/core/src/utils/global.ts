@@ -22,7 +22,8 @@ export const __EASY_TRACK__: Partial<EasyTrack> = {
     entryTime: getTimestamp()
   },
   hasError: false,
-  networkStatus: NetworkStatus.ONLINE
+  networkStatus: NetworkStatus.ONLINE,
+  networkType: ''
 };
 
 /**

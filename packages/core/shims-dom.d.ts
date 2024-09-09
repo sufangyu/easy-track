@@ -1,9 +1,11 @@
 declare global {
   interface Navigator {
     readonly connection?: NavigatorConnection;
+    readonly mozConnection?: NavigatorConnection;
+    readonly webkitConnection?: NavigatorConnection;
   }
 
-  interface NavigatorConnection {
+  interface NavigatorConnection extends EventTarget {
     /**
      * 网络类型
      *
@@ -67,7 +69,15 @@ declare global {
      * @memberof NavigatorConnection
      */
     readonly saveData?: boolean;
-    // onchange?: () => void; // EventListener
+    onchange?: EventListenerOrEventListenerObject;
+    readonly addEventListener: (
+      type: 'change',
+      listener: EventListenerOrEventListenerObject
+    ) => void;
+    readonly removeEventListener: (
+      type: 'change',
+      listener: EventListenerOrEventListenerObject
+    ) => void;
   }
 }
 

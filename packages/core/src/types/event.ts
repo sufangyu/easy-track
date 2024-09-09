@@ -331,5 +331,6 @@ export interface RouteParams {
  */
 export enum NetworkStatus {
   ONLINE = 'online',
-  OFFLINE = 'offline'
+  OFFLINE = 'offline',
+  CHANGE = 'change'
 }

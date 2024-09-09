@@ -123,6 +123,8 @@ export interface Switch {
   recordScreen: boolean;
   /** 网络 */
   network: boolean;
+  /** 日志 */
+  logger: boolean;
 }
 
 /**

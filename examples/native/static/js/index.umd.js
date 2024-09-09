@@ -3907,6 +3907,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   var NetworkStatus = /* @__PURE__ */ ((NetworkStatus2) => {
     NetworkStatus2["ONLINE"] = "online";
     NetworkStatus2["OFFLINE"] = "offline";
+    NetworkStatus2["CHANGE"] = "change";
     return NetworkStatus2;
   })(NetworkStatus || {});
   var RequestMethod = /* @__PURE__ */ ((RequestMethod2) => {
@@ -5717,7 +5718,8 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       entryTime: getTimestamp()
     },
     hasError: false,
-    networkStatus: NetworkStatus.ONLINE
+    networkStatus: NetworkStatus.ONLINE,
+    networkType: ""
   };
   const isBrowserEnv = isWindow(typeof window !== "undefined" ? window : 0);
   const isElectronEnv = !!((_b = (_a2 = window == null ? void 0 : window.process) == null ? void 0 : _a2.versions) == null ? void 0 : _b.electron);
@@ -25193,15 +25195,27 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
         eventEmitter.emit(EventType$1.NETWORK, NetworkStatus.OFFLINE);
       }
     });
+    if ("connection" in navigator) {
+      const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      connection == null ? void 0 : connection.addEventListener("change", () => {
+        if (!navigator.onLine || __EASY_TRACK__.networkStatus === NetworkStatus.OFFLINE) {
+          return;
+        }
+        eventEmitter.emit(EventType$1.NETWORK, NetworkStatus.CHANGE);
+      });
+    }
   };
   const networkCallback = () => {
     return (networkState) => {
       if (__EASY_TRACK__.networkStatus === networkState) {
         return;
       }
-      __EASY_TRACK__.networkStatus = networkState;
+      if (networkState !== NetworkStatus.CHANGE) {
+        __EASY_TRACK__.networkStatus = networkState;
+      }
       const curNetworkInfo = getCurrentNetworkInfo();
-      eventTrack.send({
+      const eventType = networkState === NetworkStatus.CHANGE ? "add" : "send";
+      eventTrack[eventType]({
         type: EventType$1.NETWORK,
         category: networkState,
         time: getTimestamp(),
