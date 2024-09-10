@@ -21,13 +21,35 @@
         埋点（支持定义上报名称、数据）
       </button>
     </div>
+
+    <div class="mt-4">
+      <h3>输入框</h3>
+      <div class="mb-1">
+        <input class="cla p-2" v-model="nativeInput" placeholder="请输入" />
+      </div>
+      <div class="mb-1">
+        <textarea
+          class="cla p-2"
+          v-model="nativeTextarea"
+          placeholder="请输入"
+        ></textarea>
+      </div>
+
+      <div class="mb-1">
+        <div class="cla p-2" contenteditable="true">这里可以的编辑 div</div>
+      </div>
+    </div>
   </section>
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
+
+const nativeInput = ref("");
+const nativeTextarea = ref("");
 
 const reportParams = { message: "自定义的数据" };
 

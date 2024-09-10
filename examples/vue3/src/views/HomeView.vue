@@ -13,7 +13,7 @@
     </button>
     <RouterLink to="/news">PV（新闻列表）</RouterLink>
     <RouterLink to="/error">错误页面</RouterLink>
-    <RouterLink to="/event-track">事件埋点 & 白屏检测</RouterLink>
+    <RouterLink to="/event-track">事件埋点</RouterLink>
     <RouterLink to="/request">网络请求</RouterLink>
     <RouterLink to="/exposure-one">元素曝光</RouterLink>
     <RouterLink to="/hand-report">手动上报</RouterLink>

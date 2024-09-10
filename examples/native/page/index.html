@@ -50,12 +50,11 @@
         <button class="r" @click.stop="handleAlert" :data-event-params="JSON.stringify({ message: "自定义的数据" })" data-event-name="自定义事件名称">
           埋点（支持定义上报名称、数据）
         </button>
-        <!-- <button id="trackUpload" data-track="custom_event" onclick="onClickTrack()">自定义埋点上报</button>
-        <button data-track="custom_event" data-track-params='{"name": "张三疯", "age": 18}'>自定义埋点(非事件)</button> -->
 
+        <h4 style="margin-bottom: 8px;">输入框</h4>
         <div>
-          <input placeholder="单行输入框" class="input_normal" />
-          <textarea placeholder="多行输入框" class="input_textarea"></textarea>
+          <input class="cla" data-event-params='{"name":"张三疯","age":18}' data-event-name="input相关事件" placeholder="单行输入框" />
+          <textarea class="cla" data-event-params='{"name":"张三疯","age":18}' data-event-name="textarea相关事件" placeholder="多行输入框"></textarea>
         </div>
       </div>
     </section>

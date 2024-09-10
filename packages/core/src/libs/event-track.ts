@@ -30,6 +30,15 @@ export const listenEventTrack = () => {
     }, 250),
     capture: true
   });
+
+  on({
+    el: _global,
+    eventName: 'blur',
+    event: throttle((ev) => {
+      eventEmitter.emit(EventType.EVENT_TRACK, ev as PointerEvent);
+    }, 250),
+    capture: true
+  });
 };
 
 /**
@@ -38,10 +47,21 @@ export const listenEventTrack = () => {
  * @return {*}
  */
 export const eventTrackCallback = () => (ev: PointerEvent) => {
-  const el = getTargetDomByPointerEvent(ev);
+  const curType = ev.type as 'click' | 'blur';
+  const el = ev.type !== 'blur' ? getTargetDomByPointerEvent(ev) : (ev.target as HTMLElement);
   const globalClickListeners = options.getGlobalClickListeners() ?? [{ selector: '[data-track]' }];
 
-  if (!el) {
+  // 不处理事件埋点的情况 ----------------------------------------
+  if (!el || (el && el instanceof Window)) {
+    return;
+  }
+
+  const isUnInputElement = !(
+    (el?.hasAttribute('contenteditable') && el?.getAttribute('contenteditable') !== 'false') ||
+    ['INPUT', 'TEXTAREA'].includes(el?.tagName!)
+  );
+  // console.log('isUnInputElement', isUnInputElement);
+  if (curType === 'blur' && isUnInputElement) {
     return;
   }
 
@@ -49,59 +69,86 @@ export const eventTrackCallback = () => (ev: PointerEvent) => {
   const htmlString = htmlElementAsString(el);
   // 位置信息信息
   const rect = el.getBoundingClientRect();
-  // 元素上的自定义事件名称、上报数据
-  const curEventName = el.getAttribute('data-event-name') ?? '';
-  const curEventParams = el.getAttribute('data-event-params') ?? '';
-  // 元素的 xPath
-  const xPath = getElementXPath(el);
+  // 元素上的自定义事件名称、上报数据、XPath
+  let curEventName = el.getAttribute('data-event-name') ?? '';
+  let curEventParams = el.getAttribute('data-event-params') ?? '';
+  let xPath = getElementXPath(el);
 
-  // 上报指定的配置元素
+  // 上报指定的配置元素 --------------------------------------------
   if (globalClickListeners.length > 0) {
-    globalClickListeners.forEach(
-      ({ selector = '', elementText = '', eventName = '', data = '' }) => {
-        // 是否目标元素
-        let isTargetEle = false;
-        if (selector) {
-          const elements = document.querySelectorAll(selector);
-          isTargetEle = [...elements].includes(el);
-        } else if (el.textContent === elementText) {
-          isTargetEle = true;
+    // 是否目标元素
+    let isTargetEle = false;
+    let curSelector = '';
+    let curElementText = '';
+    let curData = null;
+
+    for (let i = 0; i < globalClickListeners.length; i++) {
+      const {
+        selector = '',
+        elementText = '',
+        eventName = '',
+        data = ''
+      } = globalClickListeners[i];
+
+      curSelector = selector;
+      curElementText = elementText;
+      curData = data;
+
+      // 匹配是否是目标元素
+      if (selector) {
+        const elements = document.querySelectorAll(selector);
+        const curEle = findTargetNode(el, [...elements]);
+        if (curEle) {
+          // 从当前节点取相关数据
+          curEventName = curEventName || curEle.getAttribute('data-event-name') || eventName || '';
+          curEventParams = curEventParams || curEle.getAttribute('data-event-params') || '';
         }
 
-        if (!isTargetEle) {
-          return;
-        }
-
-        eventTrack.add({
-          type: EventType.EVENT_TRACK,
-          category: 'click',
-          status: StatusType.Ok,
-          time: getTimestamp(),
-          data: {
-            selector,
-            elementText: elementText ?? el.textContent,
-            rect,
-            url: getLocationHref(),
-            eventName: eventName || curEventName,
-            xPath,
-            data: unknownToObject(data),
-            params: unknownToObject(curEventParams)
-          }
-        });
+        isTargetEle = !!curEle;
+      } else if (el.textContent === elementText) {
+        isTargetEle = true;
       }
-    );
-    return;
-  }
 
-  // 全部元素上报
-  if (htmlString) {
+      if (isTargetEle) {
+        break;
+      }
+    }
+
+    if (!isTargetEle) {
+      return;
+    }
+
     eventTrack.add({
       type: EventType.EVENT_TRACK,
-      category: 'click',
+      category: curType,
       status: StatusType.Ok,
       time: getTimestamp(),
       data: {
-        el: interceptStr(htmlString, 200),
+        selector: curSelector,
+        inputValue: (el as HTMLInputElement).value ?? el.innerText ?? '',
+        elementText: curElementText ?? el.textContent,
+        rect,
+        url: getLocationHref(),
+        eventName: curEventName,
+        xPath,
+        data: unknownToObject(curData),
+        params: unknownToObject(curEventParams)
+      }
+    });
+
+    return;
+  }
+
+  // 全部元素上报 ------------------------------------------------
+  if (htmlString) {
+    eventTrack.add({
+      type: EventType.EVENT_TRACK,
+      category: curType,
+      status: StatusType.Ok,
+      time: getTimestamp(),
+      data: {
+        selector: interceptStr(htmlString, 200),
+        inputValue: (el as HTMLInputElement).value ?? el.innerText ?? '',
         elementText: interceptStr(el.innerText || '', 100),
         rect,
         url: getLocationHref(),
@@ -111,4 +158,43 @@ export const eventTrackCallback = () => (ev: PointerEvent) => {
       }
     });
   }
+};
+
+/**
+ * 查找目标节点
+ *
+ * - 循环向上查找，找到目标节点则返回该节点
+ *
+ * @param {HTMLElement} currentNode
+ * @param {Element[]} targetNodes
+ * @param {number} [maxDepth=5]
+ * @return {*}  {(HTMLElement | null)}
+ */
+const findTargetNode = (
+  currentNode: HTMLElement,
+  targetNodes: Element[],
+  maxDepth: number = 5
+): HTMLElement | null => {
+  let depth = 0;
+  let node: HTMLElement | null = currentNode;
+
+  // 循环向上查找
+  while (node && depth < maxDepth) {
+    // 如果当前节点是目标节点，返回该节点
+    if ([...targetNodes].includes(node)) {
+      return node;
+    }
+
+    // 如果当前节点是 body，停止查找
+    if (node.tagName.toLowerCase() === 'body') {
+      break;
+    }
+
+    // 向上移动到父节点
+    node = node.parentElement;
+    depth++;
+  }
+
+  // 如果查找过程中没有找到目标节点，返回 null
+  return null;
 };

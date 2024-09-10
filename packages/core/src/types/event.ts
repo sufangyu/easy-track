@@ -83,7 +83,7 @@ interface EventParamsPerformance extends EventParamsBase {
 // 埋点事件、曝光事件
 interface EventParamsEventTrack extends EventParamsBase {
   type: EventType.EVENT_TRACK;
-  category: 'click' | 'exposure';
+  category: 'click' | 'blur' | 'exposure';
 }
 
 // 录屏事件

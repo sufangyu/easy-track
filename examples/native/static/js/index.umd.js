@@ -7728,59 +7728,92 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       }, 250),
       capture: true
     });
+    on$1({
+      el: _global,
+      eventName: "blur",
+      event: throttle$1((ev) => {
+        eventEmitter.emit(EventType$1.EVENT_TRACK, ev);
+      }, 250),
+      capture: true
+    });
   };
   const eventTrackCallback = () => (ev) => {
-    const el = getTargetDomByPointerEvent(ev);
+    const curType = ev.type;
+    const el = ev.type !== "blur" ? getTargetDomByPointerEvent(ev) : ev.target;
     const globalClickListeners = options.getGlobalClickListeners() ?? [{ selector: "[data-track]" }];
-    if (!el) {
+    if (!el || el && el instanceof Window) {
+      return;
+    }
+    const isUnInputElement = !((el == null ? void 0 : el.hasAttribute("contenteditable")) && (el == null ? void 0 : el.getAttribute("contenteditable")) !== "false" || ["INPUT", "TEXTAREA"].includes(el == null ? void 0 : el.tagName));
+    if (curType === "blur" && isUnInputElement) {
       return;
     }
     const htmlString = htmlElementAsString(el);
     const rect = el.getBoundingClientRect();
-    const curEventName = el.getAttribute("data-event-name") ?? "";
-    const curEventParams = el.getAttribute("data-event-params") ?? "";
-    const xPath = getElementXPath(el);
+    let curEventName = el.getAttribute("data-event-name") ?? "";
+    let curEventParams = el.getAttribute("data-event-params") ?? "";
+    let xPath = getElementXPath(el);
     if (globalClickListeners.length > 0) {
-      globalClickListeners.forEach(
-        ({ selector = "", elementText = "", eventName = "", data = "" }) => {
-          let isTargetEle = false;
-          if (selector) {
-            const elements = document.querySelectorAll(selector);
-            isTargetEle = [...elements].includes(el);
-          } else if (el.textContent === elementText) {
-            isTargetEle = true;
+      let isTargetEle = false;
+      let curSelector = "";
+      let curElementText = "";
+      let curData = null;
+      for (let i2 = 0; i2 < globalClickListeners.length; i2++) {
+        const {
+          selector = "",
+          elementText = "",
+          eventName = "",
+          data = ""
+        } = globalClickListeners[i2];
+        curSelector = selector;
+        curElementText = elementText;
+        curData = data;
+        if (selector) {
+          const elements = document.querySelectorAll(selector);
+          const curEle = findTargetNode(el, [...elements]);
+          if (curEle) {
+            curEventName = curEventName || curEle.getAttribute("data-event-name") || eventName || "";
+            curEventParams = curEventParams || curEle.getAttribute("data-event-params") || "";
           }
-          if (!isTargetEle) {
-            return;
-          }
-          eventTrack.add({
-            type: EventType$1.EVENT_TRACK,
-            category: "click",
-            status: StatusType.Ok,
-            time: getTimestamp(),
-            data: {
-              selector,
-              elementText: elementText ?? el.textContent,
-              rect,
-              url: getLocationHref(),
-              eventName: eventName || curEventName,
-              xPath,
-              data: unknownToObject(data),
-              params: unknownToObject(curEventParams)
-            }
-          });
+          isTargetEle = !!curEle;
+        } else if (el.textContent === elementText) {
+          isTargetEle = true;
         }
-      );
+        if (isTargetEle) {
+          break;
+        }
+      }
+      if (!isTargetEle) {
+        return;
+      }
+      eventTrack.add({
+        type: EventType$1.EVENT_TRACK,
+        category: curType,
+        status: StatusType.Ok,
+        time: getTimestamp(),
+        data: {
+          selector: curSelector,
+          inputValue: el.value ?? el.innerText ?? "",
+          elementText: curElementText ?? el.textContent,
+          rect,
+          url: getLocationHref(),
+          eventName: curEventName,
+          xPath,
+          data: unknownToObject(curData),
+          params: unknownToObject(curEventParams)
+        }
+      });
       return;
     }
     if (htmlString) {
       eventTrack.add({
         type: EventType$1.EVENT_TRACK,
-        category: "click",
+        category: curType,
         status: StatusType.Ok,
         time: getTimestamp(),
         data: {
-          el: interceptStr(htmlString, 200),
+          selector: interceptStr(htmlString, 200),
+          inputValue: el.value ?? el.innerText ?? "",
           elementText: interceptStr(el.innerText || "", 100),
           rect,
           url: getLocationHref(),
@@ -7790,6 +7823,21 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
         }
       });
     }
+  };
+  const findTargetNode = (currentNode, targetNodes, maxDepth = 5) => {
+    let depth = 0;
+    let node2 = currentNode;
+    while (node2 && depth < maxDepth) {
+      if ([...targetNodes].includes(node2)) {
+        return node2;
+      }
+      if (node2.tagName.toLowerCase() === "body") {
+        break;
+      }
+      node2 = node2.parentElement;
+      depth++;
+    }
+    return null;
   };
   (function() {
     if (typeof window !== "object") {
