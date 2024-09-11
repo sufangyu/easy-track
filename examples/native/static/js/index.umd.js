@@ -7647,7 +7647,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     });
   };
   const errorCallback = () => (ev) => {
-    const { target, error = "", message = "" } = ev;
+    const { target, error = "", message = "", name = "unknown" } = ev;
     if (!(target == null ? void 0 : target.localName)) {
       const [stackFrame] = parse$6(!target ? ev : error);
       const { fileName = "", functionName = "", columnNumber: column, lineNumber: line } = stackFrame;
@@ -7656,6 +7656,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       }
       const data = {
         fileName,
+        errorType: name,
         functionName,
         line,
         column,
@@ -7696,7 +7697,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   };
   const unhandledrejectionCallback = () => (ev) => {
     const { reason } = ev;
-    if (typeof reason === "string") {
+    if (!(reason instanceof Error)) {
       return;
     }
     const [stackFrame] = parse$6(reason);
@@ -7706,6 +7707,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     }
     const data = {
       fileName,
+      errorType: reason.name ?? "unknown",
       functionName,
       line,
       column,

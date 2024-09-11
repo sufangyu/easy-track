@@ -26,7 +26,7 @@ export const listenUnhandledrejection = () => {
 export const unhandledrejectionCallback = () => (ev: PromiseRejectionEvent) => {
   const { reason } = ev;
   // 过滤字符串类型的报错
-  if (typeof reason === 'string') {
+  if (!(reason instanceof Error)) {
     return;
   }
 
@@ -40,6 +40,7 @@ export const unhandledrejectionCallback = () => (ev: PromiseRejectionEvent) => {
 
   const data = {
     fileName,
+    errorType: reason.name ?? 'unknown',
     functionName,
     line,
     column,

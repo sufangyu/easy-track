@@ -31,10 +31,11 @@ export const errorCallback: () => (
   data: ErrorEvent & {
     target?: { localName?: string; src?: string; href?: string };
     error?: any;
+    name?: string;
     message?: string;
   }
 ) => void = () => (ev) => {
-  const { target, error = '', message = '' } = ev;
+  const { target, error = '', message = '', name = 'unknown' } = ev;
 
   // 语法错误
   if (!target?.localName) {
@@ -48,6 +49,7 @@ export const errorCallback: () => (
 
     const data = {
       fileName,
+      errorType: name,
       functionName,
       line,
       column,
