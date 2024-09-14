@@ -166,6 +166,18 @@ app.use(EasyTrack, {
 }
 ```
 
+**推荐：**
+
+推荐不适用该配置项目, 直接使用默认的配置即可, 也就是在需要监控的元素上添加 `data-track` 属性。另外, 还可以增加 `data-event-name` 和 `data-event-params` 属性来定义监控事件的名称和上报数据。
+
+```html
+<div data-track data-event-name="事件名" data-event-params="{msg: '上报数据'}"></div>
+
+<el-button data-track data-event-name="事件名" data-event-params="{msg: '上报数据'}"></el-button>
+```
+
+> 扩展: 元素曝光也可以通过给要监听元素增加 `data-exposure` 属性来监控。
+
 ### <span id="Switch">功能开关（Switch）</span>
 
 | 名称                 | 类型      | 默认值 | 必传项 | 描述                                      |
@@ -273,21 +285,91 @@ eventTrack.send({
 
 ### 基础属性（baseInfo）
 
-| 属性名         | 描述                                                                                                       |
-| :------------- | :--------------------------------------------------------------------------------------------------------- |
-| domain         | URL 的主机（IP 地址或域名）和端口                                                                          |
-| href           | 当前页面打开URL页面                                                                                        |
-| referer        | 前一个访问页面的URL地址                                                                                    |
-| userAgent      | 用户代理, 识别客户使用的操作系统及版本、CPU 类型、浏览器及版本、浏览器渲染引擎、浏览器语言、浏览器插件等。 |
-| screenWidth    | 屏幕的宽度                                                                                                 |
-| screenHeight   | 屏幕的高度                                                                                                 |
-| vireportWidth  | 内容的宽度                                                                                                 |
-| vireportHeight | 内容的高度                                                                                                 |
-| language       | 浏览器语言                                                                                                 |
-| dpr            | 设备的物理像素分辨率与`CSS`像素分辨率之比                                                                  |
-| networkType    | 网络类型                                                                                                   |
-| networkSpeed   | 网速, 单位 Mbps                                                                                            |
+| 属性名         | 描述                                                                                                     |
+| :------------- | :------------------------------------------------------------------------------------------------------- |
+| domain         | URL 的主机（IP 地址或域名）和端口                                                                        |
+| href           | 当前页面打开URL页面                                                                                      |
+| referer        | 前一个访问页面的URL地址                                                                                  |
+| userAgent      | 用户代理, 识别客户使用的操作系统及版本、CPU 类型、浏览器及版本、浏览器渲染引擎、浏览器语言、浏览器插件等 |
+| screenWidth    | 屏幕的宽度                                                                                               |
+| screenHeight   | 屏幕的高度                                                                                               |
+| vireportWidth  | 内容的宽度                                                                                               |
+| vireportHeight | 内容的高度                                                                                               |
+| language       | 浏览器语言                                                                                               |
+| dpr            | 设备的物理像素分辨率与`CSS`像素分辨率之比                                                                |
+| networkType    | 网络类型                                                                                                 |
+| networkSpeed   | 网速, 单位 Mbps                                                                                          |
 
 ### 事件具体数据（data）
 
-- [-] xxx
+#### 白屏事件
+
+| 属性名 | 类型          | 描述     |
+| :----- | :------------ | -------- |
+| status | `ok`、`error` | 白屏状态 |
+| url    | `string`      | 页面 URL |
+
+#### 网络状态事件
+
+| 属性名       | 类型                          | 描述                          |
+| :----------- | :---------------------------- | ----------------------------- |
+| networkState | `online`, `offline`, `change` | 网络状态                      |
+| networkType  | `2g`, `3g`, `4g`, `slow-2g`   | 网络类型                      |
+| networkSpeed | `number`                      | 网络速度, 网络速度, 单位 Mbps |
+
+#### 控制台日志事件
+
+| 属性名  | 类型           | 描述     |
+| :------ | :------------- | -------- |
+| level   | `warn`,`error` | 日志级别 |
+| message | `any[]`        | 日志信息 |
+
+#### 性能事件
+
+- FCP、LCP、TTFB、FID、FSP 等指标
+
+| 属性名 | 类型                                      | 描述     |
+| :----- | :---------------------------------------- | -------- |
+| name   | `CLS`, `FCP`, `FID`, `INP`, `LCP`, `TTFB` | 指标名称 |
+| rating | `good`, `needs-improvement`, `poor`       | 指标值   |
+| value  | `number`                                  | 指标值   |
+
+- 长任务（PerformanceEntry）
+
+| 属性名    | 类型     | 描述                |
+| :-------- | :------- | ------------------- |
+| name      | `string` | 名字                |
+| entryType | `string` | 上报的 metric 类型  |
+| startTime | `number` | metric 上报时的时间 |
+| duration  | `number` | 事件耗时            |
+
+- 内存信息
+
+| 属性名          | 类型     | 描述                                          |
+| :-------------- | :------- | --------------------------------------------- |
+| jsHeapSizeLimit | `number` | 上下文内可用堆的最大体积，以字节计算          |
+| totalJSHeapSize | `number` | 已分配的堆体积，以字节计算                    |
+| usedJSHeapSize  | `number` | 当前 JS 堆活跃段（segment）的体积，以字节计算 |
+
+- 资源加载信息（PerformanceResourceTiming[]）
+
+| 属性名           | 类型       | 描述                                                             |
+| :--------------- | :--------- | ---------------------------------------------------------------- |
+| name             | `string`   | 资源 URL                                                         |
+| entryType        | `resource` | 类型                                                             |
+| startTime        | `number`   | 开始时间                                                         |
+| duration         | `number`   | 响应时长, `responseEnd` 和 `startTime` 差值                      |
+| initiatorType:   | `string`   | 资源类型, 如: `script`, `style`, `link` 等                       |
+| redirectStart:   | `number`   | 初始重定向的开始获取时间                                         |
+| redirectEnd:     | `number`   | 重定向响应的最后一个字节后时间                                   |
+| transferSize:    | `number`   | 资源的大小（以八位字节为单位）,包括响应头字段和响应 payload body |
+| encodedBodySize: | `number`   | 从 payload body 的提取（HTTP 或高速缓存）接收的大小              |
+| decodedBodySize: | `number`   | 从消息正文 ( message body ) 的提取（HTTP 或缓存）接收的大小      |
+| fetchStart:      | `number`   | 始获取资源之前                                                   |
+| connectStart:    | `number`   | 在浏览器检索资源，开始建立与服务器的连接之前                     |
+| connectEnd:      | `number`   | 在浏览器完成与服务器的连接以检索资源之后                         |
+| requestStart:    | `number`   | 在浏览器开始从服务器请求资源之前                                 |
+| responseStart:   | `number`   | 在浏览器开始从服务器请求资源之前                                 |
+| responseEnd:     | `number`   | 收到资源的最后一个字节之后或紧接在传输连接关闭之前               |
+
+更多 PerformanceResourceTiming 属性[查看](https://developer.mozilla.org/zh-CN/docs/Web/API/PerformanceResourceTiming)

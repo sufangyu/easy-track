@@ -82,7 +82,7 @@ interface EventParamsNetwork extends EventParamsBase {
     /** 网络类型 */
     // @ts-ignore
     networkType?: NavigatorConnection['effectiveType'];
-    /** 网络速度 */
+    /** 网络速度, 单位 Mbps */
     networkSpeed?: number;
   };
 }
@@ -103,6 +103,29 @@ interface EventParamsLogger extends EventParamsBase {
 interface EventParamsPerformance extends EventParamsBase {
   type: EventType.PERFORMANCE;
   category: 'performance' | 'longtask' | 'resource' | 'memory';
+  data: // 获取 FCP、LCP、TTFB、FID、FSP 等指标
+  | {
+        /** 指标名称 */
+        name?: 'CLS' | 'FCP' | 'FID' | 'INP' | 'LCP' | 'TTFB';
+        /** 指标评级 */
+        rating?: 'good' | 'needs-improvement' | 'poor';
+        /** 指标值 */
+        value?: number;
+      }
+    // 长任务
+    | PerformanceEntry
+
+    // 内存信息
+    | {
+        /** 上下文内可用堆的最大体积，以字节计算 */
+        jsHeapSizeLimit?: number;
+        /** 已分配的堆体积，以字节计算 */
+        totalJSHeapSize?: number;
+        /** 当前 JS 堆活跃段（segment）的体积，以字节计算 */
+        usedJSHeapSize?: number;
+      }
+    // 资源加载信息
+    | PerformanceResourceTiming[];
 }
 
 // 埋点事件、曝光事件
