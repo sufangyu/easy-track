@@ -7654,20 +7654,19 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       if (fileName.startsWith("chrome-extension://")) {
         return;
       }
-      const data = {
-        fileName,
-        errorType: name,
-        functionName,
-        line,
-        column,
-        message
-      };
       eventTrack.send({
         type: EventType$1.ERROR,
         category: "error",
         time: getTimestamp(),
         status: StatusType.Error,
-        data
+        data: {
+          fileName,
+          errorType: name,
+          functionName,
+          line,
+          column,
+          message
+        }
       });
     }
     if (target == null ? void 0 : target.localName) {
@@ -7705,20 +7704,19 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
     if (fileName.startsWith("chrome-extension://")) {
       return;
     }
-    const data = {
-      fileName,
-      errorType: reason.name ?? "unknown",
-      functionName,
-      line,
-      column,
-      message: unknownToString(reason.message || reason.stack)
-    };
     eventTrack.send({
       type: EventType$1.UNHANDLEDREJECTION,
       category: "unhandledrejection",
       status: StatusType.Error,
       time: getTimestamp(),
-      data
+      data: {
+        fileName,
+        errorType: reason.name ?? "unknown",
+        functionName,
+        line,
+        column,
+        message: unknownToString(reason.message || reason.stack)
+      }
     });
   };
   const listenEventTrack = () => {
@@ -25250,7 +25248,7 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
       }
     });
     if ("connection" in navigator) {
-      const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      const connection = navigator.connection;
       connection == null ? void 0 : connection.addEventListener("change", () => {
         if (!navigator.onLine || __EASY_TRACK__.networkStatus === NetworkStatus.OFFLINE) {
           return;
@@ -25348,7 +25346,6 @@ var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "sy
   };
   const initReplace = () => {
     const siwtchMap = options.getSwitchMap();
-    console.log("siwtchMap", siwtchMap);
     if (siwtchMap[EventType$1.EVENT_TRACK]) {
       addListenOrReplace({
         type: EventType$1.EVENT_TRACK,

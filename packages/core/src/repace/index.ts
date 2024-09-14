@@ -16,7 +16,6 @@ import { EventType } from '../types';
 
 export const initReplace = () => {
   const siwtchMap = options.getSwitchMap();
-  console.log('siwtchMap', siwtchMap);
 
   // 事件埋点
   if (siwtchMap[EventType.EVENT_TRACK]) {

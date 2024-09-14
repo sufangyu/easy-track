@@ -38,20 +38,18 @@ export const unhandledrejectionCallback = () => (ev: PromiseRejectionEvent) => {
     return;
   }
 
-  const data = {
-    fileName,
-    errorType: reason.name ?? 'unknown',
-    functionName,
-    line,
-    column,
-    message: unknownToString(reason.message || reason.stack)
-  };
-
   eventTrack.send({
     type: EventType.UNHANDLEDREJECTION,
     category: 'unhandledrejection',
     status: StatusType.Error,
     time: getTimestamp(),
-    data
+    data: {
+      fileName,
+      errorType: reason.name ?? 'unknown',
+      functionName,
+      line,
+      column,
+      message: unknownToString(reason.message || reason.stack)
+    }
   });
 };

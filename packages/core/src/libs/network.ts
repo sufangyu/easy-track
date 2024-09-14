@@ -27,9 +27,9 @@ export const listenNetwork = () => {
   });
 
   if ('connection' in navigator) {
-    const connection =
-      navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    const connection = navigator.connection;
 
+    // @ts-ignore
     connection?.addEventListener('change', () => {
       // 当前或之前是断网状态, 不触发 change 回调
       if (!navigator.onLine || __EASY_TRACK__.networkStatus === NetworkStatus.OFFLINE) {

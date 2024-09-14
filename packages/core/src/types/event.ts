@@ -1,6 +1,8 @@
 import { Callback } from './base';
 import { DeviceInfo } from './global';
 import { CacheType } from './options';
+import { HttpData } from './request';
+import { ExposureObserveItem } from './track';
 
 /**
  * 事件类型
@@ -60,18 +62,41 @@ interface EventParamsBase {
 interface EventParamsBlankScreen extends EventParamsBase {
   type: EventType.BLANK_SCREEN;
   category: 'blank-screen';
+  /** 事件数据 */
+  data: {
+    /** 白屏状态. ok、error  */
+    status?: StatusType;
+    /** 页面 URL */
+    url?: string;
+  };
 }
 
 // 网络状态事件
 interface EventParamsNetwork extends EventParamsBase {
   type: EventType.NETWORK;
   category: NetworkStatus;
+  /** 事件数据 */
+  data: {
+    /** 网络状态 */
+    networkState?: NetworkStatus;
+    /** 网络类型 */
+    // @ts-ignore
+    networkType?: NavigatorConnection['effectiveType'];
+    /** 网络速度 */
+    networkSpeed?: number;
+  };
 }
 
 // 控制台日志事件
 interface EventParamsLogger extends EventParamsBase {
   type: EventType.LOGGER;
-  category: keyof Console,
+  category: keyof Console;
+  data: {
+    /** 日志级别. warn、error */
+    level?: keyof Console;
+    /** 日志信息 */
+    message?: any[];
+  };
 }
 
 // 性能事件
@@ -84,24 +109,66 @@ interface EventParamsPerformance extends EventParamsBase {
 interface EventParamsEventTrack extends EventParamsBase {
   type: EventType.EVENT_TRACK;
   category: 'click' | 'blur' | 'exposure';
+  data: // click、blur 数据
+  | {
+        /** 元素选择器 */
+        selector?: string;
+        /** 输入框的值, input、textarea 才有该值 */
+        inputValue?: string;
+        /** 元素内容 */
+        elementText?: string;
+        /** 元素 xPath */
+        xPath?: string | null;
+        /** 元素坐标尺寸信息 */
+        rect?: DOMRect;
+        /** 页面 URL */
+        url?: string;
+        /** 事件名称 */
+        eventName?: string;
+        /** 事件参数, 主要使用该数据 */
+        params?: Record<string, any>;
+        /** 事件参数 */
+        data?: Record<string, any>;
+      }
+    // exposure 数据
+    | ExposureObserveItem[];
 }
 
 // 录屏事件
 interface EventParamsRecordScreen extends EventParamsBase {
   type: EventType.RECORD_SCREEN;
   category: 'record-screen';
+  data: {
+    /** 录屏数据, 已压缩 */
+    recordData?: string;
+  };
 }
 
 // 错误事件
 interface EventParamsError extends EventParamsBase {
   type: EventType.ERROR | EventType.UNHANDLEDREJECTION | EventType.RESOURCE;
   category: 'error' | 'unhandledrejection' | 'resource';
+  data: {
+    /** 文件名称 */
+    fileName?: string;
+    /** 错误信息的类型 */
+    errorType?: string;
+    /** 函数名称 */
+    functionName?: string;
+    /** 行号 */
+    line?: number;
+    /** 列号 */
+    column?: number;
+    /** 错误信息 */
+    message?: string;
+  };
 }
 
 // 网络请求事件
 interface EventParamsHttp extends EventParamsBase {
   type: EventType.REQUEST;
   category: 'xhr' | 'fetch';
+  data: HttpData;
 }
 
 // 页面访问事件
@@ -115,6 +182,27 @@ interface EventParamsPage extends EventParamsBase {
     | 'pagehide'
     | 'pageshow'
     | 'beforeunload';
+  data: {
+    /** 页面跳转来源 */
+    from?: string;
+    /** 页面跳转目标 */
+    to?: string;
+    /** 历史页面信息 */
+    urls?: string[];
+    /** 页面访问数据 */
+    pv?: {
+      /** 进入页面时间 */
+      entryTime: number;
+      /** 离开页面时间 */
+      leaveTime: number;
+      /** 停留时间 */
+      stayTime: number;
+      /** 页面 URL */
+      pageUrl: string;
+      /** 上一个页面 URL */
+      referer: string;
+    };
+  };
 }
 
 /**

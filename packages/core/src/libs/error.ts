@@ -47,20 +47,19 @@ export const errorCallback: () => (
       return;
     }
 
-    const data = {
-      fileName,
-      errorType: name,
-      functionName,
-      line,
-      column,
-      message
-    };
     eventTrack.send({
       type: EventType.ERROR,
       category: 'error',
       time: getTimestamp(),
       status: StatusType.Error,
-      data
+      data: {
+        fileName,
+        errorType: name,
+        functionName,
+        line,
+        column,
+        message
+      }
     });
   }
 
